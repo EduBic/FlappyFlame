@@ -1,6 +1,7 @@
 -- Requirements
 local composer = require "composer"
 
+local newWalls = require "scene.lib.newWalls"
 local jsonUtils = require "scene.lib.jsonUtils"
 
 -- Variables local to scene
@@ -16,6 +17,8 @@ local runtime = 0
 
 -- Game elements
 local player, upWall, bottomWall
+local topWalls = display.newGroup()
+local bottomWalls = display.newGroup()
 
 local scoreText
 local score = 0
@@ -144,7 +147,12 @@ end
 
 onEnterFrame = function()
      --print( "enterFrame" )
-     movebackground(getDeltaTime())
+     moveWalls(scene, topWalls, bottomWalls, player, function()
+          score = score + 1
+          scoreText.text = "Score: " .. score
+          print("logging: new point!")
+     end)
+     --movebackground(getDeltaTime())
 end
 
 onPause = function()
@@ -252,7 +260,9 @@ function scene:create( event )
 
      physics.start()
 
-     addScrollableBackground(sceneGroup)
+     addWalls(sceneGroup, topWalls, bottomWalls)
+
+     --addScrollableBackground(sceneGroup)
      addPlayer(sceneGroup)
      addBounders(sceneGroup)
      --createPauseMenu(sceneGroup)

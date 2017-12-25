@@ -4,9 +4,10 @@ local json = require( "json" )
 --- DEBUG function -----------------
 
 local function printTable(table)
-     print("printTable")
+     print("JsonUtils: printTable")
      print(table.volume)
      print(table.style)
+     print("\n")
 
      -- for index, data in ipairs(table) do
      --      print(index)
