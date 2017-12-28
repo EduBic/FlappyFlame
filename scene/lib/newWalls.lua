@@ -50,9 +50,9 @@ end
 
 local physics = require "physics"
 
-local distance = 180
-local wallWidth = 10
-local wallsCacheLength = 10
+local distance = 225
+local wallWidth = 15
+local wallsCacheLength = 3
 
 function addWalls(scene, topWalls, bottomWalls)
 
@@ -87,9 +87,8 @@ function addWalls(scene, topWalls, bottomWalls)
 end
 
 function moveWalls(scene, topWalls, bottomWalls, player, onScore)
-
      --if next(topWalls) ~= nil and next(bottomWalls) ~= nil then  -- check empty
-
+     if topWalls.numChildren ~= nil and bottomWalls.numChildren ~= nil then
           for i = 1, topWalls.numChildren do
                local topWall = topWalls[i]
                local bottomWall = bottomWalls[i]
@@ -116,8 +115,8 @@ function moveWalls(scene, topWalls, bottomWalls, player, onScore)
                     physics.addBody( topWall, "static" )
                     physics.addBody( bottomWall, "static" )
                else
-                    topWall.x = topWall.x - 3 --- scrollSpeed * deltaTime
-                    bottomWall.x = bottomWall.x - 3 -- - scrollSpeed * deltaTime
+                    topWall.x = topWall.x - 2 --- scrollSpeed * deltaTime
+                    bottomWall.x = bottomWall.x - 2 -- - scrollSpeed * deltaTime
                end
 
                if topWall.x < player.x and topWall.isAlreadyPass == false
@@ -128,5 +127,5 @@ function moveWalls(scene, topWalls, bottomWalls, player, onScore)
                -- TODO: give an invisible rectangle which collision give me the score
                -- end
           end
-     --end
+     end
 end

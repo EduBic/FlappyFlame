@@ -107,7 +107,7 @@ function loadStyleSetting()
      local gameSettings = loadDataSetting()
 
      if gameSettings.style == nil then
-          gameSettings.style = {r = 0, g = 0, b = 0} -- default value
+          gameSettings.style = {r = 1, g = 1, b = 1} -- default value
      end
 
      return gameSettings.style
