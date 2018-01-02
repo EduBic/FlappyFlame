@@ -23,6 +23,8 @@ local function onSliderChanged(event)
      print( "slider changed" .. event.value)
      -- TODO change values in json settings
      saveVolumeSetting(event.value)
+
+     return true
 end
 
 ----------------------------------------------------------------------------

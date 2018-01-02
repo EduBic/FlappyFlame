@@ -30,8 +30,8 @@ local function getTopAndBottomWallCenterY()
      return {
           top = topWallCenterY,
           bottom = bottomWallCenterY,
-          topHeight = topWallHeight,
-          bottomHeight = bottomWallHeight
+          topHeight = topWallHeight + 30,    -- for go outside display
+          bottomHeight = bottomWallHeight + 30
      }
 end
 
@@ -51,7 +51,7 @@ end
 local physics = require "physics"
 
 local distance = 225
-local wallWidth = 15
+local wallWidth = 30
 local wallsCacheLength = 3
 
 function addWalls(scene, topWalls, bottomWalls)
@@ -63,18 +63,40 @@ function addWalls(scene, topWalls, bottomWalls)
           local coordsX = bottomRightX + wallWidth -- outside right screen side
           local coordsY = getTopAndBottomWallCenterY()
 
-          local topWall = display.newRect(scene, coordsX + distance * (i - 1), coordsY.top,
-                                   wallWidth, coordsY.topHeight)
-          local bottomWall = display.newRect(scene, coordsX + distance * (i - 1), coordsY.bottom,
-                                   wallWidth, coordsY.bottomHeight)
+          -- local topWall = display.newRect(scene, coordsX + distance * (i - 1), coordsY.top,
+          --                          wallWidth, coordsY.topHeight)
+          -- local bottomWall = display.newRect(scene, coordsX + distance * (i - 1), coordsY.bottom,
+          --                          wallWidth, coordsY.bottomHeight)
+          local topWall = display.newImageRect(scene, "assets/stalagmite_ice.png",
+               wallWidth, coordsY.topHeight)
+          topWall.rotation = 180
+          topWall.x = coordsX + distance * (i - 1)
+          topWall.y = coordsY.top
+
+          local bottomWall = display.newImageRect(scene, "assets/stalagmite_ice.png",
+               wallWidth, coordsY.bottomHeight)
+          bottomWall.x = coordsX + distance * (i - 1)
+          bottomWall.y = coordsY.bottom
+
 
           topWall.isAlreadyPass = false
 
           topWall.myName = "wall"
           bottomWall.myName = "wall"
 
-          physics.addBody( topWall, "static" )
-          physics.addBody( bottomWall, "static" )
+          local topTriangleShape = {
+               0, - coordsY.topHeight / 2,
+               -wallWidth / 2, coordsY.top,
+               wallWidth / 2, coordsY.top,
+          }
+          local bottomTriangleShape = {
+               0, -coordsY.bottomHeight / 2,
+               wallWidth / 2, coordsY.bottom / 2,
+               -wallWidth / 2, coordsY.bottom / 2
+          }
+
+          physics.addBody( topWall, "static", { shape = topTriangleShape })
+          physics.addBody( bottomWall, "static", { shape = bottomTriangleShape } )
 
           topWalls:insert(topWall)
           bottomWalls:insert(bottomWall)
@@ -112,8 +134,19 @@ function moveWalls(scene, topWalls, bottomWalls, player, onScore)
                     physics.removeBody( topWall )
                     physics.removeBody( bottomWall )
 
-                    physics.addBody( topWall, "static" )
-                    physics.addBody( bottomWall, "static" )
+                    local topTriangleShape = {
+                         0, - coordsY.topHeight / 2,
+                         -wallWidth / 2, coordsY.top,
+                         wallWidth / 2, coordsY.top,
+                    }
+                    local bottomTriangleShape = {
+                         0, -coordsY.bottomHeight / 2,
+                         wallWidth / 2, coordsY.bottom / 2,
+                         -wallWidth / 2, coordsY.bottom / 2
+                    }
+
+                    physics.addBody( topWall, "static", { shape = topTriangleShape })
+                    physics.addBody( bottomWall, "static", { shape = bottomTriangleShape } )
                else
                     topWall.x = topWall.x - 2 --- scrollSpeed * deltaTime
                     bottomWall.x = bottomWall.x - 2 -- - scrollSpeed * deltaTime
