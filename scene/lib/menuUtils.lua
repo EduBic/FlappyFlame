@@ -7,7 +7,7 @@ function newMenuBackgroundWH(sceneGroup, width, height)
      local instance = display.newRect(0, 0, width, height)
      instance.x = display.contentCenterX
      instance.y = display.contentCenterY
-     instance.alpha = 0.42
+     instance.alpha = 0.5
      instance:setFillColor(255/255, 165/255, 0/255)
 
      sceneGroup:insert(instance)

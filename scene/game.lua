@@ -140,18 +140,20 @@ end
 local function addPlayer(scene)
      print( "new player!" )
 
+     local style = loadStyleSetting()
+
      -- player = display.newCircle( scene,
      --                             playerStartX,
      --                             playerStartY,
      --                             playerRadius )
-     player = display.newImageRect( scene, "assets/FireballReduced.png", 20, 20 )
+     player = display.newImageRect( scene, style, 20, 20 )
 	player.x = playerStartX
 	player.y = playerStartY
 
      --player.myName = "player"
      player.myName = "player"
 
-     local style = loadStyleSetting()
+
      --player:setFillColor(style.r, style.g, style.b)
 
      -- physics.addBody( player, "dynamic", {
@@ -344,8 +346,9 @@ function scene:onResume()
      physics.start()
 end
 
-function scene:setPlayerStyle(color)
-     player:setFillColor(color.r, color.g, color.b)
+function scene:setPlayerStyle(style)
+     --player:setFillColor(color.r, color.g, color.b)
+     player = swapImage(player, style, 20, 20)
 end
 
 

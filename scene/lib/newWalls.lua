@@ -115,7 +115,7 @@ function moveWalls(scene, topWalls, bottomWalls, player, onScore)
                local topWall = topWalls[i]
                local bottomWall = bottomWalls[i]
 
-               if topWall.x < -30 then
+               if topWall.x < -wallWidth then
                     --topWall.x = display.contentWidth + 60
                     --bottomWall.x = display.contentWidth + 60
                     local coordsX = bottomRightX + wallWidth -- outside right screen side
