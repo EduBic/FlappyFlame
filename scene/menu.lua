@@ -1,5 +1,6 @@
 -- Requirements
 local composer = require "composer"
+local widget = require "widget"
 
 -- Variables local to scene
 local scene = composer.newScene()
@@ -10,8 +11,8 @@ local function gotoGame()
 	composer.gotoScene( "scene.game" ) --, { time=800, effect="crossFade" }
 end
 
-local function gotoHighScores()
-	composer.gotoScene( "scene.highscores", { time=800, effect="crossFade" } )
+local function gotoHighestScore()
+	composer.gotoScene( "scene.highestScore" )
 end
 
 --------------------
@@ -30,10 +31,10 @@ function scene:create( event )
 	-- title.x = display.contentCenterX
 	-- title.y = 200
 
-	local playButton = display.newText( sceneGroup, "Play",
-                                         display.contentCenterX,
-                                         display.contentCenterY,
-                                         native.systemFont, 35 )
+	-- local playButton = display.newText( sceneGroup, "Play",
+     --                                     display.contentCenterX,
+     --                                     display.contentCenterY,
+     --                                     native.systemFont, 35 )
 	--playButton:setFillColor( 0.82, 0.86, 1 )
 
 	-- local highScoresButton = display.newText( sceneGroup, "High Scores",
@@ -41,18 +42,54 @@ function scene:create( event )
      --                                           display.contentCenterY + 30,
      --                                           native.systemFont, 35 )
 	--highScoresButton:setFillColor( 0.75, 0.78, 1 )
+	local btnHeight = 40
+	local btnWidth = 160
+	local distance = 24
 
-	playButton:addEventListener( "tap", gotoGame )
+	local playBtn = widget.newButton({
+		label = "Play",
+		x = display.contentCenterX,
+		y = display.contentCenterY - distance,
+		onRelease = gotoGame,
+		-- style
+		labelColor = { default={1,1,1}, over={0,0,0} },
+		shape = "roundedRect",
+		width = btnWidth,
+		height = btnHeight,
+		cornerRadius = 2,
+		fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} }
+	})
+	sceneGroup:insert(playBtn)
+
+
+	local highscoresBtn = widget.newButton({
+		label = "High Scores",
+		x = display.contentCenterX,
+		y = display.contentCenterY + distance,
+		onRelease = gotoHighestScore,
+		-- style
+		labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0 } },
+		shape = "roundedRect",
+		width = btnWidth,
+ 		height = btnHeight,
+        	cornerRadius = 2,
+		fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} }
+	})
+	sceneGroup:insert(highscoresBtn)
+
+	--playButton:addEventListener( "tap", gotoGame )
 	--highScoresButton:addEventListener( "tap", gotoHighScores )
 end
 
 
 function scene:show( event )
   -- local phase = event.phase
-  -- if ( phase == "will" ) then
+  -- local prevScene = composer.getSceneName( "previous" )
   --
-  -- elseif ( phase == "did" ) then
-  --
+  -- if ( phase == "will" ) and prev ~= nil then
+  --   composer.removeScene(prevScene, false)
+  -- elseif ( phase == "did" ) and prev ~= nil then
+  --   composer.gotoScene(prevScene)
   -- end
 end
 

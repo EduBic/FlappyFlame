@@ -88,7 +88,7 @@ onEnterFrame = function()
      --print( "enterFrame" )
      moveWalls(scene, topWalls, bottomWalls, player, function()
           score = score + 1
-          scoreText.text = "Score: " .. score
+          scoreText.text = "SCORE: " .. score
           print("logging: new point!")
      end)
 
@@ -268,8 +268,14 @@ local function onCollision(event)
 
      if (checkCollision(obj1, obj2, "player", "wall")) or
         (checkCollision(obj1, obj2, "player", "bounder")) then
-          player.myName = "deathPlayer"
-          composer.gotoScene( "scene.menu", { time = 800, effect="crossFade" })
+
+        local oldHighestScore = loadHighestScoreSetting()
+        if score > oldHighestScore then
+             saveHighestScoreSetting(score)
+        end
+
+        player.myName = "deathPlayer"
+        composer.gotoScene( "scene.menu", { time = 800, effect="crossFade" })
      end
 end
 
@@ -307,7 +313,7 @@ function scene:show( event )
           Runtime:addEventListener("collision", onCollision )
           Runtime:addEventListener("tap", pushPlayer)
           Runtime:addEventListener("accelerometer", onTilt )
-          Runtime:addEventListener( "key", onKeyEvent )
+          Runtime:addEventListener("key", onKeyEvent )
           --gameLoopTimer = timer.performWithDelay( 500, gameLoop, 0 )
      end
 end
@@ -335,7 +341,7 @@ end
 
 function scene:destroy( event )
      print("Game-scene destroy")
-  --collectgarbage()
+     --collectgarbage()
 end
 
 ------------ Game scene external call functions ------------
@@ -349,6 +355,10 @@ end
 function scene:setPlayerStyle(style)
      --player:setFillColor(color.r, color.g, color.b)
      player = swapImage(player, style, 20, 20)
+end
+
+function scene:setDeathPlayer()
+     player.myName = "deathPlayer"
 end
 
 

@@ -7,6 +7,7 @@ local function printTable(table)
      print("JsonUtils: printTable")
      print(table.volume)
      print(table.style)
+     print(table.highestScore)
      print("\n")
 
      -- for index, data in ipairs(table) do
@@ -107,7 +108,7 @@ function loadStyleSetting()
      local gameSettings = loadDataSetting()
 
      if gameSettings.style == nil then
-          gameSettings.style = {r = 1, g = 1, b = 1} -- default value
+          gameSettings.style = "assets/FireballReduced.png" -- default value
      end
 
      return gameSettings.style
@@ -123,6 +124,33 @@ function saveStyleSetting(newValue)
      else
           gameSettings = {}
           gameSettings.style = newValue
+     end
+
+     saveDataSetting(gameSettings)
+end
+
+function loadHighestScoreSetting()
+     print("logging: loadHighestScoreSetting")
+
+     local gameSettings = loadDataSetting()
+
+     if gameSettings.highestScore == nil then
+          gameSettings.highestScore = 0 -- default value
+     end
+
+     return gameSettings.highestScore
+end
+
+function saveHighestScoreSetting(newValue)
+     print("logging: saveHighestScoreSetting")
+
+     local gameSettings = loadDataSetting()
+
+     if (gameSettings ~= nil) then
+          gameSettings.highestScore = newValue
+     else
+          gameSettings = {}
+          gameSettings.highestScore = newValue
      end
 
      saveDataSetting(gameSettings)

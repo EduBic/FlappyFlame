@@ -7,7 +7,7 @@
 local composer = require( "composer" )
 local physics = require( "physics" )
 
-physics.setDrawMode( "normal" )
+physics.setDrawMode( "hybrid" )
 
 -- Display info
 topLeftX = display.screenOriginX

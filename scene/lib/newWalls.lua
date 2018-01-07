@@ -1,6 +1,6 @@
 
 local function getTopAndBottomWallCenterY()
-     local variability = 25
+     local variability = 35
      local minWallHeight = display.contentCenterY - variability
      local maxWallHeight = display.contentCenterY + variability
 
@@ -9,7 +9,7 @@ local function getTopAndBottomWallCenterY()
 
      -- innerSpaceHeight must extend up and under
      -- the final space is 2 * innerSpaceHeight
-     local innerHalfSpaceHeight = 60
+     local innerHalfSpaceHeight = 58
 
      -- compute centers side point Y of two walls
      local topWallBottomSideY = spaceCenterY - innerHalfSpaceHeight

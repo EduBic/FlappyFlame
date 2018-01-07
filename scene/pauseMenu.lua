@@ -34,6 +34,11 @@ local function onOptionsTapped(event)
 end
 
 local function onExitTapped(event)
+     composer.gotoScene( "scene.menu" )
+
+     local gameScene = composer.getScene("scene.game")
+     gameScene:setDeathPlayer()
+
      return true
 end
 
@@ -74,7 +79,7 @@ function scene:create( event )
           font = native.systemFont,
           fontSize = fontSizeUi
      })
-     --exitText:addEventListener("tap", onExitTapped)
+     exitText:addEventListener("tap", onExitTapped)
 
      --widget.newButton()
 end
