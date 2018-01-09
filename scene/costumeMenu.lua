@@ -30,21 +30,33 @@ local function buildStyleUi(scene, fileName, pos)
           styleHeight + framePadding
      )
 
-     styleFrame:setFillColor(1,1,1,0.15)
+     local frameColor = { 1, 1, 1, 0.15}
+
+     styleFrame:setFillColor(unpack(frameColor))
      styleFrame.strokeWidth = 1
      styleFrame:setStrokeColor(1,0,0, 0.42)
 
      styleFrame:toBack()
 
-     style:addEventListener("tap", function()
-          -- update style settings
-          local style = "assets/" .. fileName
-          saveStyleSetting(style)
+     styleFrame:addEventListener("touch", function(event)
+          local phase = event.phase
 
-          -- update game player if game is running
-          local gameScene = composer.getScene( "scene.game" )
-          if gameScene then
-               gameScene:setPlayerStyle(style)
+          if phase == "began" then
+               print("styleFrame")
+               styleFrame:setFillColor(1,1,1,0.08)
+          elseif phase == "ended" then
+               print("styleFrame")
+               styleFrame:setFillColor(unpack(frameColor))
+
+               -- update style settings
+               local style = "assets/" .. fileName
+               saveStyleSetting(style)
+
+               -- update game player if game is running
+               local gameScene = composer.getScene( "scene.game" )
+               if gameScene then
+                    gameScene:setPlayerStyle(style)
+               end
           end
 
           return true

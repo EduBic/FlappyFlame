@@ -26,7 +26,7 @@ local bottomWalls = display.newGroup()
 local scoreText
 local score = 0
 local isAlreadyPass = false
-local isGamePaused = false
+local _isGameLost = false
 
 
 -- Options game elements
@@ -106,7 +106,10 @@ onPause = function(event)
 
      Runtime:removeEventListener("tap", pushPlayer)
 
-     composer:showOverlay("scene.pauseMenu", { isModal = true, params={ isGameLost = true } })
+     composer:showOverlay("scene.pauseMenu", {
+          isModal = true,
+          params={ isGameLost = _isGameLost }
+     })
 
      return true
 end
@@ -274,6 +277,7 @@ local function onCollision(event)
         end
 
         player.myName = "deathPlayer"
+        _isGameLost = true
 
         print("logging: remove listeners")
         Runtime:removeEventListener("enterFrame", onEnterFrame)
