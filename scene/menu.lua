@@ -1,24 +1,15 @@
 -- Requirements
 local composer = require "composer"
 local widget = require "widget"
+local audio = require "audio"
 
 local menuUtils = require "scene.lib.menuUtils"
+local jsonUtils = require "scene.lib.jsonUtils"
 
 -- Variables local to scene
 local scene = composer.newScene()
 
 --------------------
-
-local function gotoGame()
-	composer.gotoScene( "scene.game" ) --, { time=800, effect="crossFade" }
-end
-
-local function gotoHighestScore()
-	composer.gotoScene( "scene.highestScore", { params = { overlay = false} })
-end
-
-local function gotoHelp()
-end
 
 --------------------
 
@@ -30,34 +21,29 @@ function scene:create( event )
 	                                   native.systemFontBold, 35 )
 	titleText:setFillColor(1,1,1)
 
-	-- local buttons = newMainMenu(sceneGroup, 90)
-     --
-	-- buttons.playBtn:addEventListener("tap", gotoGame)
-	-- buttons.bestscoreBtn:addEventListener("tap", gotoHighestScore)
-
 	local bg = display.newImageRect(sceneGroup, "assets/background.png",
           display.contentWidth * 2, display.contentHeight)
      bg.x = display.contentCenterX
      bg.y = display.contentCenterY
      bg:toBack()
 
+	local volume = loadVolumeSetting()
+	audio.setVolume( volume )
+
 end
 
 
 function scene:show( event )
-  local phase = event.phase
+	local phase = event.phase
 
-  if ( phase == "will" ) then
-    --composer.removeScene(prevScene, false)
-    local mParams = {
-	    fromMainMenu = true
-    }
+	if ( phase == "will" ) then
+		--composer.removeScene(prevScene, false)
+		local mParams = { fromMainMenu = true }
+		composer.showOverlay( "scene.pauseMenu", { params = mParams } )
 
-    composer.showOverlay( "scene.pauseMenu", { params = mParams } )
-
-  elseif ( phase == "did" ) then
-    --composer.gotoScene(prevScene)
-  end
+	elseif ( phase == "did" ) then
+	--composer.gotoScene(prevScene)
+	end
 end
 
 function scene:hide( event )

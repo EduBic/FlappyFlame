@@ -50,9 +50,9 @@ end
 
 local physics = require "physics"
 
-local distance = 225
+local distance = 180
 local wallWidth = 30
-local wallsCacheLength = 3
+local wallsCacheLength = 4
 local wallsSpeed = 2.9
 
 function addWalls(scene, topWalls, bottomWalls)

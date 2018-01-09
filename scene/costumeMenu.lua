@@ -30,11 +30,13 @@ local function buildStyleUi(scene, fileName, pos)
           styleHeight + framePadding
      )
 
-     local frameColor = { 1, 1, 1, 0.15}
+     local frameColor = { 1, 1, 1, 0.4 }
 
      styleFrame:setFillColor(unpack(frameColor))
+     
      styleFrame.strokeWidth = 1
-     styleFrame:setStrokeColor(1,0,0, 0.42)
+     styleFrame:setStrokeColor(unpack(mMainColor))
+     styleFrame.alpha = 0.42
 
      styleFrame:toBack()
 

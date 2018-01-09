@@ -12,15 +12,28 @@ local buttons
 local fromMainMenu = false
 local isGameLost = false
 
+local bgMusic
+
 -------- FUNCTION LISTENER --------------------------------------------------
 
 local function onPlayTapped(event)
      composer.hideOverlay()
+     audio.fadeOut( { channel=1, time=500 } )
+     timer.performWithDelay( 1005, function()
+          audio.stop(1)  -- Stop all audio
+     	audio.dispose( bgMusic )
+     end)
+
      composer.gotoScene( "scene.game" )
 end
 
 local function onResumeTapped(event)
      composer:hideOverlay()
+     audio.fadeOut( { channel=1, time=1000 } )
+     timer.performWithDelay( 1005, function()
+          audio.stop(1)  -- Stop all audio
+     	audio.dispose( bgMusic )
+     end)
 
      local gameScene = composer.getScene("scene.game")
      print("Resume Game-scene object")
@@ -31,6 +44,11 @@ end
 
 local function onRestartTapped(event)
      composer.hideOverlay()
+     audio.fadeOut( { channel=1, time=1000 } )
+     timer.performWithDelay( 1005, function()
+          audio.stop(1)  -- Stop all audio
+     	audio.dispose( bgMusic )
+     end)
 
      composer.gotoScene( "scene.refresh" )
 
@@ -99,52 +117,17 @@ function scene:create( event )
      buttons.bestscoreBtn:addEventListener("tap", onBestScoreTapped)
      buttons.exitBtn:addEventListener("tap", onExitTapped)
 
-     -- menuBackground = newMenuBackground(sceneGroup)
-     --
-     -- resumeText = display.newText({
-     --      parent = sceneGroup,
-     --      text = "Resume",
-     --      x = display.contentCenterX,
-     --      y = display.contentCenterY - distance,
-     --      font = native.systemFont,
-     --      fontSize = fontSizeUi
-     -- })
-     -- resumeText:addEventListener("tap", onResumeTapped)
-     --
-     -- optionsText = display.newText({
-     --      parent = sceneGroup,
-     --      text = "Options",
-     --      x = display.contentCenterX,
-     --      y = display.contentCenterY,
-     --      font = native.systemFont,
-     --      fontSize = fontSizeUi
-     -- })
-     -- optionsText:addEventListener("tap", onOptionsTapped)
-     --
-     -- exitText = display.newText({
-     --      parent = sceneGroup,
-     --      text = "Exit",
-     --      x = display.contentCenterX,
-     --      y = display.contentCenterY + distance,
-     --      font = native.systemFont,
-     --      fontSize = fontSizeUi
-     -- })
-     -- exitText:addEventListener("tap", onExitTapped)
-
-     --widget.newButton()
+     bgMusic = audio.loadStream( "assets/TitleScreen.mp3" )
 end
 
--- local function enterFrame(event)
---   local elapsed = event.time
--- end
-
 function scene:show( event )
-  local phase = event.phase
-  if ( phase == "will" ) then
-    --Runtime:addEventListener("enterFrame", enterFrame)
-  elseif ( phase == "did" ) then
-
-  end
+     local phase = event.phase
+     if ( phase == "will" ) then
+     --Runtime:addEventListener("enterFrame", enterFrame)
+     elseif ( phase == "did" ) then
+          audio.setVolume( loadVolumeSetting(), { channel=1 } )
+          audio.play( bgMusic, { channel=1, loops=-1, fadein=2000 } )
+     end
 end
 
 function scene:hide( event )
@@ -157,7 +140,7 @@ function scene:hide( event )
 end
 
 function scene:destroy( event )
-  --collectgarbage()
+     --collectgarbage()
 end
 
 scene:addEventListener("create")

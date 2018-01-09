@@ -3,6 +3,15 @@ local display = require "display"
 local composer = require "composer"
 local widget = require "widget"
 
+local function joinMyTables(t1, t2)
+
+   for k,v in ipairs(t2) do
+      table.insert(t1, v)
+   end
+
+   return t1
+end
+
 -- Global Variables
 btnHeight = 28
 btnWidth = 230
@@ -13,9 +22,12 @@ backgroundMargin = 32
 mMenuStrokeWidth = 1.4
 mStrokeWidth = 1
 
+mMainColorAlpha = {255/255, 190/255, 0/255, 140/255}
+mMainColor = {255/255, 190/255, 0/255}
+
 mLabelColors = { default={1,1,1}, over={1,1,1} }
-mFillColors = { default={255/255, 0/255, 0/255, 140/255}, over={1,0,0,0.4} }
-mStrokeFillColors = { default={255/255, 0/255, 0/255}, over={1,0,0} }
+mFillColors = { default=mMainColorAlpha, over={255/255, 190/255, 0/255, 110/255} }
+mStrokeFillColors = { default=mMainColor, over=mMainColor }
 
 
 function newMenuBackground(sceneGroup)
@@ -32,10 +44,10 @@ function newMenuBackgroundWH(sceneGroup, width, height)
      instance.x = sceneGroup.contentCenterX
      instance.y = sceneGroup.contentCenterY
      instance.alpha = 0.5
-     instance:setFillColor(255/255, 0/255, 0/255, 140/255)
+     instance:setFillColor(unpack(mMainColorAlpha))
 
      instance.strokeWidth = mMenuStrokeWidth
-     instance:setStrokeColor(255/255, 0/255, 0/255)
+     instance:setStrokeColor(unpack(mMainColor))
 
      sceneGroup:insert(instance)
 

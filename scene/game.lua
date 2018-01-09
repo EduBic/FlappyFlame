@@ -23,6 +23,8 @@ local pauseBtn
 local topWalls = display.newGroup()
 local bottomWalls = display.newGroup()
 
+local gameMusic
+
 local scoreText
 local score = 0
 local isAlreadyPass = false
@@ -101,6 +103,10 @@ onPause = function(event)
      print("logging: onPause")
      pauseBtn.isVisible = false
 
+     audio.fadeOut( { channel=2, time=1000 } )
+     timer.performWithDelay( 1005, function()
+          audio.stop(2)
+     end)
      Runtime:removeEventListener("enterFrame", onEnterFrame)
      physics.pause()
 
@@ -237,21 +243,8 @@ pushPlayer = function()
      print("tapped!")
      print(player)
      if (player.myName == "player") then
-          --player.path.radius = playerRadius + 2
-          --timer.performWithDelay( 200, function() player.path.radius = playerRadius end)
-
-          -- player = swapImage(player, "balloon_flame.png", 20, 30)
-          -- timer.performWithDelay( 400, function()
-          --      player = swapImage(player, "balloon.png", 20, 20)
-          -- end )
-
-          -- TODO cancel prev force
-          --player:applyForce(0, -20, player.x, player.y)
           player:applyLinearImpulse(0, -0.7, player.x, player.y)
-
           -- TODO: attach effect on bottom of player
-          --local jumpEffect = display.newRect(player.x, player.y + playerRadius + 5, 5, 5 )
-          --timer.performWithDelay( 400, function() display.remove(jumpEffect) end )
      end
 
      return false
@@ -278,6 +271,15 @@ local function onCollision(event)
 
         player.myName = "deathPlayer"
         _isGameLost = true
+
+        audio.fadeOut( { channel=2, time=1000 } )
+
+        deathSound = audio.loadSound( "assets/thud.mp3" )
+        audio.play(deathSound, { channel = 3})
+        
+        timer.performWithDelay( 1005, function()
+             audio.stop(2)
+        end)
 
         print("logging: remove listeners")
         Runtime:removeEventListener("enterFrame", onEnterFrame)
@@ -307,6 +309,8 @@ function scene:create( event )
      sceneGroup:insert(gameUiGroup)
      addGameUi(gameUiGroup)
 
+     gameMusic = audio.loadStream("assets/Battle.mp3")
+
      print("Game-scene object: ")
      print(scene)
 end
@@ -326,6 +330,8 @@ function scene:show( event )
           Runtime:addEventListener("accelerometer", onTilt )
           Runtime:addEventListener("key", onKeyEvent )
           --gameLoopTimer = timer.performWithDelay( 500, gameLoop, 0 )
+          audio.setVolume( loadVolumeSetting(), { channel=2 } )
+          audio.play( gameMusic, { channel=2, loops=-1, fadein=1000 } )
      end
 end
 
@@ -353,6 +359,8 @@ end
 function scene:destroy( event )
      print("Game-scene destroy")
      --collectgarbage()
+     audio.stop(2)
+     audio.dispose( gameMusic )
 end
 
 ------------ Game scene external call functions ------------

@@ -41,7 +41,7 @@ function scene:create( event )
 
      local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
 
-     local distance = 34
+     local distance = 36
 
      local background = newMenuBackgroundH(menuGroup, btnHeight*3)
 
@@ -54,7 +54,9 @@ function scene:create( event )
           width = btnWidth,
           height = btnHeight,
 		cornerRadius = 2,
-		fillColor = mFillColors
+		fillColor = mFillColors,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
      })
      volumeBtn:addEventListener("tap", onVolumeTapped)
      menuGroup:insert(volumeBtn)
@@ -64,14 +66,14 @@ function scene:create( event )
           label = "Costume",
           x = 0,
           y = 0,
-		--onRelease = gotoGame,
-		-- style
 		labelColor = mLabelColors,
 		shape = "roundedRect",
 		width = btnWidth,
 		height = btnHeight,
 		cornerRadius = 2,
-		fillColor = mFillColors
+		fillColor = mFillColors,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
 	})
      costumeBtn:addEventListener("tap", onCostumeTapped)
 	menuGroup:insert(costumeBtn)

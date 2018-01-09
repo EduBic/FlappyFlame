@@ -22,7 +22,8 @@ local backBtn
 local function onSliderChanged(event)
      print( "slider changed" .. event.value)
      -- TODO change values in json settings
-     saveVolumeSetting(event.value)
+     saveVolumeSetting(event.value/100)
+     audio.setVolume( event.value/100 )
 
      return true
 end
@@ -51,7 +52,7 @@ function scene:create( event )
           fontSize = fontSizeUi
      })
 
-     local valueSet = loadVolumeSetting()
+     local valueSet = loadVolumeSetting() * 100
 
      local volumeSlider = widget.newSlider({
         x = 0, y = 0,
