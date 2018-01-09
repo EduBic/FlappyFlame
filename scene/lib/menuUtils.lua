@@ -57,7 +57,7 @@ function newMenuGroup(scene, fromMainMenu)
      return mg
 end
 
-function newBackButton(scene, _y, prevScene, _fromMainMenu)
+function newBackButton(scene, _y, prevScene, _params)
      mainMenu = mainMenu or false
      fromMainMenu = fromMainMenu or false
 
@@ -80,7 +80,7 @@ function newBackButton(scene, _y, prevScene, _fromMainMenu)
      backBtn:addEventListener("tap", function(event)
           composer.showOverlay( prevScene, {
                isModal = true,
-               params = { fromMainMenu = _fromMainMenu }
+               params = _params
           } )
           return true
      end)

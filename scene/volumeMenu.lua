@@ -61,7 +61,7 @@ function scene:create( event )
      })
      menuGroup:insert(volumeSlider)
 
-     backBtn = newBackButton(menuGroup, distance, "scene.optionsMenu", fromMainMenu)
+     backBtn = newBackButton(menuGroup, distance, "scene.optionsMenu", event.params)
 
      local menuBackground = newMenuBackgroundH(menuGroup,
           volumeText.height + volumeSlider.height + btnHeight)

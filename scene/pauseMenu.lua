@@ -10,6 +10,7 @@ local scene = composer.newScene()
 local buttons
 
 local fromMainMenu = false
+local isGameLost = false
 
 -------- FUNCTION LISTENER --------------------------------------------------
 
@@ -28,10 +29,18 @@ local function onResumeTapped(event)
      return true
 end
 
+local function onRestartTapped(event)
+     composer.hideOverlay()
+
+     composer.gotoScene( "scene.refresh" )
+
+     return true
+end
+
 local function onHelpTapped(event)
      composer.showOverlay( "scene.helpMenu", {
           isModal = true,
-          params = { fromMainMenu = fromMainMenu}
+          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
      } )
      return true
 end
@@ -39,7 +48,7 @@ end
 local function onOptionsTapped(event)
      composer.showOverlay( "scene.optionsMenu", {
           isModal = true,
-          params = { fromMainMenu = fromMainMenu}
+          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
      } )
 
      return true
@@ -48,7 +57,7 @@ end
 local function onBestScoreTapped(event)
      composer.showOverlay( "scene.highestScore", {
           isModal = true,
-          params = { fromMainMenu = fromMainMenu}
+          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
      } )
 
      return true
@@ -67,6 +76,7 @@ function scene:create( event )
 
      if event.params then
           fromMainMenu = event.params.fromMainMenu or false
+          isGameLost = event.params.isGameLost or false
      end
 
      if fromMainMenu then
@@ -74,6 +84,11 @@ function scene:create( event )
 
           buttons.playBtn:setLabel("Play")
           buttons.playBtn:addEventListener("tap", onPlayTapped)
+     elseif isGameLost then
+          buttons = newMainMenu(sceneGroup)
+
+          buttons.playBtn:setLabel("Restart")
+          buttons.playBtn:addEventListener("tap", onRestartTapped)
      else
           buttons = newMainMenu(sceneGroup)
           buttons.playBtn:addEventListener("tap", onResumeTapped)

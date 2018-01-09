@@ -43,7 +43,7 @@ function scene:create( event )
           align = "center"
      })
 
-     local backBtn = newBackButton(menuGroup, distance, "scene.pauseMenu", fromMainMenu)
+     local backBtn = newBackButton(menuGroup, distance, "scene.pauseMenu", event.params)
 
 end
 

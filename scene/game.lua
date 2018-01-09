@@ -106,7 +106,7 @@ onPause = function(event)
 
      Runtime:removeEventListener("tap", pushPlayer)
 
-     composer:showOverlay("scene.pauseMenu", { isModal = true })
+     composer:showOverlay("scene.pauseMenu", { isModal = true, params={ isGameLost = true } })
 
      return true
 end
@@ -193,8 +193,8 @@ local function addGameUi(group)
      })
      group:insert(scoreText)
 
-     local size = 30
-     local margin = 2
+     local size = 36
+     local margin = 3
 
      pauseBtn = display.newImageRect("assets/OptionButton.png", size, size)
 	pauseBtn.x = topLeftX + pauseBtn.width / 2 + margin
@@ -274,7 +274,15 @@ local function onCollision(event)
         end
 
         player.myName = "deathPlayer"
-        composer.gotoScene( "scene.menu")--, { time = 800, effect="crossFade" })
+
+        print("logging: remove listeners")
+        Runtime:removeEventListener("enterFrame", onEnterFrame)
+        Runtime:removeEventListener("tap", pushPlayer)
+        Runtime:removeEventListener("collision", onCollision)
+        Runtime:removeEventListener("accelerometer", onTilt)
+        Runtime:removeEventListener("key", onKeyEvent )
+
+        composer.showOverlay( "scene.lost", { time = 800, effect="crossFade" })
      end
 end
 

@@ -82,7 +82,7 @@ function scene:create( event )
      local styleThree = buildStyleUi(menuGroup, "FireballReducedStrange.png", -1.8)
 
      local backBtn = newBackButton(menuGroup, distance + 4,
-          "scene.optionsMenu", fromMainMenu)
+          "scene.optionsMenu", event.params)
 
      local menuBackground = newMenuBackgroundWH(menuGroup,
           btnWidth + backgroundMargin,

@@ -9,13 +9,14 @@ local scene = composer.newScene()
 
 --
 local fromMainMenu = false
+local mParams
 
 ----- Functions Callbacks -----------
 
 local function onVolumeTapped()
      composer.showOverlay( "scene.volumeMenu", {
           isModal = true,
-          params = { fromMainMenu = fromMainMenu }
+          params = mParams
      } )
      return true
 end
@@ -23,7 +24,7 @@ end
 local function onCostumeTapped()
      composer.showOverlay( "scene.costumeMenu", {
           isModal = true,
-          params = { fromMainMenu = fromMainMenu }
+          params = mParams
      } )
      return true
 end
@@ -32,8 +33,9 @@ end
 
 function scene:create( event )
      local sceneGroup = self.view -- add display objects to this group
+     mParams = event.params
 
-     if event.params then
+     if mParams then
           fromMainMenu = event.params.fromMainMenu or false
      end
 
@@ -76,7 +78,7 @@ function scene:create( event )
 
 
      local backBtn = newBackButton(menuGroup,
-          distance, "scene.pauseMenu", fromMainMenu)
+          distance, "scene.pauseMenu", mParams)
 end
 
 function scene:show( event )
