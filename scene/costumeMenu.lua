@@ -9,11 +9,6 @@ local scene = composer.newScene()
 
 ------- Display elements --------------------------------------------------
 
-local menuBackground
-local styleOne
-local styleTwo
-local styleThree
-local backBtn
 
 ------- Functions -----------------------------------------------
 
@@ -22,17 +17,36 @@ local function buildStyleUi(scene, fileName, pos)
      local styleHeight = 45
 
      local distance = 0
+     local framePadding = 14
 
      local style = display.newImageRect(scene, "assets/" .. fileName, styleWidth, styleHeight)
-     style.x = display.contentCenterX - pos * (styleWidth + distance)
-     style.y = display.contentCenterY - 20
+     style.x = -pos * (styleWidth + distance)
+     style.y = 0
+
+     local styleFrame = display.newRect(scene,
+          -pos * (styleWidth),
+          0,
+          styleWidth + framePadding,
+          styleHeight + framePadding
+     )
+
+     styleFrame:setFillColor(1,1,1,0.15)
+     styleFrame.strokeWidth = 1
+     styleFrame:setStrokeColor(1,0,0, 0.42)
+
+     styleFrame:toBack()
 
      style:addEventListener("tap", function()
+          -- update style settings
           local style = "assets/" .. fileName
-          local gameScene = composer.getScene( "scene.game" )
-
-          gameScene:setPlayerStyle(style)
           saveStyleSetting(style)
+
+          -- update game player if game is running
+          local gameScene = composer.getScene( "scene.game" )
+          if gameScene then
+               gameScene:setPlayerStyle(style)
+          end
+
           return true
      end)
 
@@ -45,56 +59,35 @@ end
 function scene:create( event )
      local sceneGroup = self.view -- add display objects to this group
 
-     menuBackground = newMenuBackgroundWH(sceneGroup, 200, 120)
+     local fromMainMenu = false
+     if event.params then
+          fromMainMenu = event.params.fromMainMenu
+     end
 
-     local styleWidth = 60
-     local styleHeight = 30
+     local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
 
-     local distance = 20
+     local distance = 48
 
-     styleOne = buildStyleUi(sceneGroup, "FireballReduced.png", 1.5)
-     styleTwo = buildStyleUi(sceneGroup, "FireballReducedBlue.png", 0)
-     styleThree = buildStyleUi(sceneGroup, "FireballReducedStrange.png", -1.5)
+     local infoText = display.newText( {
+          parent = menuGroup,
+          text = "Select your flame style:",
+          x = 0, y = -distance,
+          font = native.systemFont,
+          fontSize = 19,
+          align = "center"
+     } )
 
-     -- styleOne = display.newRect(sceneGroup, display.contentCenterX,
-     --     display.contentCenterY - styleHeight - 1.5 * distance,
-     --                               styleWidth, styleHeight)
-     -- styleOne:setFillColor(1, 0, 0)
-     -- styleOne:addEventListener("tap", function()
-     --      local style = {r = 1, g = 0, b = 0}
-     --      local gameScene = composer.getScene("scene.game")
-     --
-     --      gameScene:setPlayerStyle(style)
-     --      saveStyleSetting(style)
-     --      return true
-     -- end)
+     local styleOne = buildStyleUi(menuGroup, "FireballReduced.png", 1.8)
+     local styleTwo = buildStyleUi(menuGroup, "FireballReducedBlue.png", 0)
+     local styleThree = buildStyleUi(menuGroup, "FireballReducedStrange.png", -1.8)
 
-     -- styleTwo = display.newRect( sceneGroup, display.contentCenterX, display.contentCenterY - distance,
-     --                               styleWidth, styleHeight)
-     -- styleTwo:setFillColor(0, 1, 0)
-     -- styleTwo:addEventListener("tap", function()
-     --      local style = {r = 0, g = 1, b = 0}
-     --      local gameScene = composer.getScene("scene.game")
-     --
-     --      gameScene:setPlayerStyle(style)
-     --      saveStyleSetting(style)
-     --      return true
-     -- end)
-     --
-     -- styleThree = display.newRect( sceneGroup, display.contentCenterX, display.contentCenterY + distance,
-     --                               styleWidth, styleHeight)
-     -- styleThree:setFillColor(0, 0, 1)
-     -- styleThree:addEventListener("tap", function()
-     --      local style = {r = 0, g = 0, b = 1}
-     --      local gameScene = composer.getScene("scene.game")
-     --
-     --      gameScene:setPlayerStyle(style)
-     --      saveStyleSetting(style)
-     --      return true
-     -- end)
+     local backBtn = newBackButton(menuGroup, distance + 4,
+          "scene.optionsMenu", fromMainMenu)
 
-     backBtn = newBackBtn(sceneGroup, display.contentCenterX,
-     display.contentCenterY + 34, "scene.optionsMenu")
+     local menuBackground = newMenuBackgroundWH(menuGroup,
+          btnWidth + backgroundMargin,
+          infoText.height + styleOne.height + btnHeight + backgroundMargin + 24)
+     menuBackground:toBack()
 
 end
 

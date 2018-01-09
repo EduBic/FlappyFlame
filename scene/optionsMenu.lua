@@ -1,32 +1,30 @@
 -- Requirements
 local composer = require "composer"
-local menuBackgroundFactory = require "scene.lib.MenuBackground"
+local widget = require "widget"
+
 local menuUtils = require "scene.lib.menuUtils"
 
 -- Variables local to scene
 local scene = composer.newScene()
 
--- Display elements
-
-local menuBackground
-local volumeBtn
-local costumeBtn
-local backBtn
+--
+local fromMainMenu = false
 
 ----- Functions Callbacks -----------
 
 local function onVolumeTapped()
-     composer.showOverlay( "scene.volumeMenu" )
+     composer.showOverlay( "scene.volumeMenu", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu }
+     } )
      return true
 end
 
 local function onCostumeTapped()
-     composer.showOverlay( "scene.costumeMenu")
-     return true
-end
-
-local function onBackTapped()
-     composer.showOverlay( "scene.pauseMenu" )
+     composer.showOverlay( "scene.costumeMenu", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu }
+     } )
      return true
 end
 
@@ -35,34 +33,50 @@ end
 function scene:create( event )
      local sceneGroup = self.view -- add display objects to this group
 
+     if event.params then
+          fromMainMenu = event.params.fromMainMenu or false
+     end
+
+     local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
+
      local distance = 34
 
-     --menuBackgroundFactory.new(menuBackground, display, sceneGroup)
-     menuBackground = newMenuBackground(sceneGroup)
+     local background = newMenuBackgroundH(menuGroup, btnHeight*3)
 
-     volumeBtn = display.newText({
-          parent = sceneGroup,
-          text = "Volume",
-          x = display.contentCenterX,
-          y = display.contentCenterY - distance,
-          font = native.systemFont,
-          fontSize = fontSizeUi
+     local volumeBtn = widget.newButton({
+          label = "Volume",
+          x = 0,
+          y = 0 - distance,
+          labelColor = mLabelColors,
+          shape = "roundedRect",
+          width = btnWidth,
+          height = btnHeight,
+		cornerRadius = 2,
+		fillColor = mFillColors
      })
      volumeBtn:addEventListener("tap", onVolumeTapped)
+     menuGroup:insert(volumeBtn)
 
-     costumeBtn = display.newText({
-          parent = sceneGroup,
-          text = "Costume",
-          x = display.contentCenterX,
-          y = display.contentCenterY,
-          font = native.systemFont,
-          fontSize = fontSizeUi
-     })
+
+     local costumeBtn = widget.newButton({
+          label = "Costume",
+          x = 0,
+          y = 0,
+		--onRelease = gotoGame,
+		-- style
+		labelColor = mLabelColors,
+		shape = "roundedRect",
+		width = btnWidth,
+		height = btnHeight,
+		cornerRadius = 2,
+		fillColor = mFillColors
+	})
      costumeBtn:addEventListener("tap", onCostumeTapped)
+	menuGroup:insert(costumeBtn)
 
-     backBtn = newBackBtn(sceneGroup, display.contentCenterX,
-     display.contentCenterY + distance, "scene.pauseMenu")
 
+     local backBtn = newBackButton(menuGroup,
+          distance, "scene.pauseMenu", fromMainMenu)
 end
 
 function scene:show( event )

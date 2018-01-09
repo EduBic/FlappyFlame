@@ -2,6 +2,8 @@
 local composer = require "composer"
 local widget = require "widget"
 
+local menuUtils = require "scene.lib.menuUtils"
+
 -- Variables local to scene
 local scene = composer.newScene()
 
@@ -12,85 +14,50 @@ local function gotoGame()
 end
 
 local function gotoHighestScore()
-	composer.gotoScene( "scene.highestScore" )
+	composer.gotoScene( "scene.highestScore", { params = { overlay = false} })
+end
+
+local function gotoHelp()
 end
 
 --------------------
 
 function scene:create( event )
-     local sceneGroup = self.view -- add display objects to this group
-	-- Code here runs when the scene is first created but has not yet appeared on screen
+     local sceneGroup = self.view
 
-     print( "create menu" )
+	local titleText = display.newText( sceneGroup, "FLAPPY FLAME",
+                     				display.contentCenterX, topLeftY + 40,
+	                                   native.systemFontBold, 35 )
+	titleText:setFillColor(1,1,1)
 
-	-- local background = display.newImageRect( sceneGroup, "background.png", 800, 1400 )
-	-- background.x = display.contentCenterX
-	-- background.y = display.contentCenterY
+	-- local buttons = newMainMenu(sceneGroup, 90)
      --
-	-- local title = display.newImageRect( sceneGroup, "balloon.png", 500, 80 )
-	-- title.x = display.contentCenterX
-	-- title.y = 200
+	-- buttons.playBtn:addEventListener("tap", gotoGame)
+	-- buttons.bestscoreBtn:addEventListener("tap", gotoHighestScore)
 
-	-- local playButton = display.newText( sceneGroup, "Play",
-     --                                     display.contentCenterX,
-     --                                     display.contentCenterY,
-     --                                     native.systemFont, 35 )
-	--playButton:setFillColor( 0.82, 0.86, 1 )
+	local bg = display.newImageRect(sceneGroup, "assets/background.png",
+          display.contentWidth * 2, display.contentHeight)
+     bg.x = display.contentCenterX
+     bg.y = display.contentCenterY
+     bg:toBack()
 
-	-- local highScoresButton = display.newText( sceneGroup, "High Scores",
-     --                                           display.contentCenterX,
-     --                                           display.contentCenterY + 30,
-     --                                           native.systemFont, 35 )
-	--highScoresButton:setFillColor( 0.75, 0.78, 1 )
-	local btnHeight = 40
-	local btnWidth = 160
-	local distance = 24
-
-	local playBtn = widget.newButton({
-		label = "Play",
-		x = display.contentCenterX,
-		y = display.contentCenterY - distance,
-		onRelease = gotoGame,
-		-- style
-		labelColor = { default={1,1,1}, over={0,0,0} },
-		shape = "roundedRect",
-		width = btnWidth,
-		height = btnHeight,
-		cornerRadius = 2,
-		fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} }
-	})
-	sceneGroup:insert(playBtn)
-
-
-	local highscoresBtn = widget.newButton({
-		label = "High Scores",
-		x = display.contentCenterX,
-		y = display.contentCenterY + distance,
-		onRelease = gotoHighestScore,
-		-- style
-		labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0 } },
-		shape = "roundedRect",
-		width = btnWidth,
- 		height = btnHeight,
-        	cornerRadius = 2,
-		fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} }
-	})
-	sceneGroup:insert(highscoresBtn)
-
-	--playButton:addEventListener( "tap", gotoGame )
-	--highScoresButton:addEventListener( "tap", gotoHighScores )
 end
 
 
 function scene:show( event )
-  -- local phase = event.phase
-  -- local prevScene = composer.getSceneName( "previous" )
-  --
-  -- if ( phase == "will" ) and prev ~= nil then
-  --   composer.removeScene(prevScene, false)
-  -- elseif ( phase == "did" ) and prev ~= nil then
-  --   composer.gotoScene(prevScene)
-  -- end
+  local phase = event.phase
+
+  if ( phase == "will" ) then
+    --composer.removeScene(prevScene, false)
+    local mParams = {
+	    fromMainMenu = true
+    }
+
+    composer.showOverlay( "scene.pauseMenu", { params = mParams } )
+
+  elseif ( phase == "did" ) then
+    --composer.gotoScene(prevScene)
+  end
 end
 
 function scene:hide( event )

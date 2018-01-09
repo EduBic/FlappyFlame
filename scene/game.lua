@@ -18,17 +18,18 @@ local runtime = 0
 -- Game elements
 local player, playerEffect, upWall, bottomWall
 local background1, background2
+local pauseBtn
+
 local topWalls = display.newGroup()
 local bottomWalls = display.newGroup()
 
 local scoreText
 local score = 0
 local isAlreadyPass = false
+local isGamePaused = false
 
 
 -- Options game elements
-local scrollSpeed = 1
-
 local playerRadius = 10
 local playerStartX = display.contentCenterX - 80
 local playerStartY = display.contentCenterY
@@ -77,7 +78,7 @@ end
 -- end
 
 local function moveBackground(background)
-     background.x = background.x - 0.5
+     background.x = background.x - 0.7
      if (background.x) < (topLeftX - display.contentWidth) then
         print("logging: restore background pos")
         background:translate(display.contentWidth * 4, 0)
@@ -96,13 +97,16 @@ onEnterFrame = function()
      moveBackground(background2)
 end
 
-onPause = function()
+onPause = function(event)
+     print("logging: onPause")
+     pauseBtn.isVisible = false
+
      Runtime:removeEventListener("enterFrame", onEnterFrame)
      physics.pause()
 
      Runtime:removeEventListener("tap", pushPlayer)
 
-     composer:showOverlay("scene.pauseMenu", { isModal = true})
+     composer:showOverlay("scene.pauseMenu", { isModal = true })
 
      return true
 end
@@ -153,15 +157,6 @@ local function addPlayer(scene)
      --player.myName = "player"
      player.myName = "player"
 
-
-     --player:setFillColor(style.r, style.g, style.b)
-
-     -- physics.addBody( player, "dynamic", {
-     --      radius = playerRadius,
-     --      density = 0.2,
-     --      bounce = 0.3
-     -- })
-
      physics.addBody( player, "dynamic", {
           density = 0.2,
           bounce = 0.3
@@ -200,10 +195,12 @@ local function addGameUi(group)
 
      local size = 30
      local margin = 2
-     local pauseBtn = display.newImageRect("assets/OptionButton.png", size, size)
+
+     pauseBtn = display.newImageRect("assets/OptionButton.png", size, size)
 	pauseBtn.x = topLeftX + pauseBtn.width / 2 + margin
      pauseBtn.y = topLeftY + pauseBtn.height / 2 + margin
 	pauseBtn:addEventListener("tap", onPause)
+     pauseBtn:toFront()
 	group:insert(pauseBtn)
 
      group:toFront()
@@ -253,6 +250,8 @@ pushPlayer = function()
           --local jumpEffect = display.newRect(player.x, player.y + playerRadius + 5, 5, 5 )
           --timer.performWithDelay( 400, function() display.remove(jumpEffect) end )
      end
+
+     return false
 end
 
 local function checkCollision(obj1, obj2, name1, name2)
@@ -275,7 +274,7 @@ local function onCollision(event)
         end
 
         player.myName = "deathPlayer"
-        composer.gotoScene( "scene.menu", { time = 800, effect="crossFade" })
+        composer.gotoScene( "scene.menu")--, { time = 800, effect="crossFade" })
      end
 end
 
@@ -347,6 +346,7 @@ end
 ------------ Game scene external call functions ------------
 
 function scene:onResume()
+     pauseBtn.isVisible = true
      Runtime:addEventListener("enterFrame", onEnterFrame)
      Runtime:addEventListener("tap", pushPlayer)
      physics.start()

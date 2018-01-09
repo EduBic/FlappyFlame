@@ -7,37 +7,55 @@ local menuUtils = require "scene.lib.menuUtils"
 local scene = composer.newScene()
 
 -- display elements
-local menuBackground
+local buttons
 
-local resumeText
-local optionsText
-local exitText
+local fromMainMenu = false
 
 -------- FUNCTION LISTENER --------------------------------------------------
+
+local function onPlayTapped(event)
+     composer.hideOverlay()
+     composer.gotoScene( "scene.game" )
+end
 
 local function onResumeTapped(event)
      composer:hideOverlay()
 
      local gameScene = composer.getScene("scene.game")
-     print("Game-scene object")
-     print(gameScene)
+     print("Resume Game-scene object")
      gameScene:onResume()
 
      return true
 end
 
+local function onHelpTapped(event)
+     composer.showOverlay( "scene.helpMenu", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu}
+     } )
+     return true
+end
+
 local function onOptionsTapped(event)
-     composer:hideOverlay()
-     composer.showOverlay( "scene.optionsMenu")
+     composer.showOverlay( "scene.optionsMenu", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu}
+     } )
+
+     return true
+end
+
+local function onBestScoreTapped(event)
+     composer.showOverlay( "scene.highestScore", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu}
+     } )
 
      return true
 end
 
 local function onExitTapped(event)
-     composer.gotoScene( "scene.menu" )
-
-     local gameScene = composer.getScene("scene.game")
-     gameScene:setDeathPlayer()
+     native.requestExit()
 
      return true
 end
@@ -47,39 +65,56 @@ end
 function scene:create( event )
      local sceneGroup = self.view -- add display objects to this group
 
-     local distance = 34
+     if event.params then
+          fromMainMenu = event.params.fromMainMenu or false
+     end
 
-     menuBackground = newMenuBackground(sceneGroup)
+     if fromMainMenu then
+          buttons = newMainMenu(sceneGroup, 90)
 
-     resumeText = display.newText({
-          parent = sceneGroup,
-          text = "Resume",
-          x = display.contentCenterX,
-          y = display.contentCenterY - distance,
-          font = native.systemFont,
-          fontSize = fontSizeUi
-     })
-     resumeText:addEventListener("tap", onResumeTapped)
+          buttons.playBtn:setLabel("Play")
+          buttons.playBtn:addEventListener("tap", onPlayTapped)
+     else
+          buttons = newMainMenu(sceneGroup)
+          buttons.playBtn:addEventListener("tap", onResumeTapped)
+     end
 
-     optionsText = display.newText({
-          parent = sceneGroup,
-          text = "Options",
-          x = display.contentCenterX,
-          y = display.contentCenterY,
-          font = native.systemFont,
-          fontSize = fontSizeUi
-     })
-     optionsText:addEventListener("tap", onOptionsTapped)
+     buttons.helpBtn:addEventListener("tap", onHelpTapped)
+     buttons.optionsBtn:addEventListener("tap", onOptionsTapped)
+     buttons.bestscoreBtn:addEventListener("tap", onBestScoreTapped)
+     buttons.exitBtn:addEventListener("tap", onExitTapped)
 
-     exitText = display.newText({
-          parent = sceneGroup,
-          text = "Exit",
-          x = display.contentCenterX,
-          y = display.contentCenterY + distance,
-          font = native.systemFont,
-          fontSize = fontSizeUi
-     })
-     exitText:addEventListener("tap", onExitTapped)
+     -- menuBackground = newMenuBackground(sceneGroup)
+     --
+     -- resumeText = display.newText({
+     --      parent = sceneGroup,
+     --      text = "Resume",
+     --      x = display.contentCenterX,
+     --      y = display.contentCenterY - distance,
+     --      font = native.systemFont,
+     --      fontSize = fontSizeUi
+     -- })
+     -- resumeText:addEventListener("tap", onResumeTapped)
+     --
+     -- optionsText = display.newText({
+     --      parent = sceneGroup,
+     --      text = "Options",
+     --      x = display.contentCenterX,
+     --      y = display.contentCenterY,
+     --      font = native.systemFont,
+     --      fontSize = fontSizeUi
+     -- })
+     -- optionsText:addEventListener("tap", onOptionsTapped)
+     --
+     -- exitText = display.newText({
+     --      parent = sceneGroup,
+     --      text = "Exit",
+     --      x = display.contentCenterX,
+     --      y = display.contentCenterY + distance,
+     --      font = native.systemFont,
+     --      fontSize = fontSizeUi
+     -- })
+     -- exitText:addEventListener("tap", onExitTapped)
 
      --widget.newButton()
 end

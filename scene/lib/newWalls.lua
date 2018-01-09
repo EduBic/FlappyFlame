@@ -9,7 +9,7 @@ local function getTopAndBottomWallCenterY()
 
      -- innerSpaceHeight must extend up and under
      -- the final space is 2 * innerSpaceHeight
-     local innerHalfSpaceHeight = 58
+     local innerHalfSpaceHeight = 56
 
      -- compute centers side point Y of two walls
      local topWallBottomSideY = spaceCenterY - innerHalfSpaceHeight
@@ -53,6 +53,7 @@ local physics = require "physics"
 local distance = 225
 local wallWidth = 30
 local wallsCacheLength = 3
+local wallsSpeed = 2.9
 
 function addWalls(scene, topWalls, bottomWalls)
 
@@ -148,8 +149,8 @@ function moveWalls(scene, topWalls, bottomWalls, player, onScore)
                     physics.addBody( topWall, "static", { shape = topTriangleShape })
                     physics.addBody( bottomWall, "static", { shape = bottomTriangleShape } )
                else
-                    topWall.x = topWall.x - 2 --- scrollSpeed * deltaTime
-                    bottomWall.x = bottomWall.x - 2 -- - scrollSpeed * deltaTime
+                    topWall.x = topWall.x - wallsSpeed
+                    bottomWall.x = bottomWall.x - wallsSpeed
                end
 
                if topWall.x < player.x and topWall.isAlreadyPass == false

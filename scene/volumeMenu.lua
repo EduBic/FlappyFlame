@@ -32,32 +32,40 @@ end
 function scene:create( event )
      local sceneGroup = self.view -- add display objects to this group
 
-     local distance = 30
+     local distance = 44
 
-     menuBackground = newMenuBackground(sceneGroup)
+     local fromMainMenu = false
+     if event.params then
+          fromMainMenu = event.params.fromMainMenu
+     end
+
+
+     local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
 
      volumeText = display.newText({
-          parent = sceneGroup,
+          parent = menuGroup,
           text = "Volume",
-          x = display.contentCenterX,
-          y = display.contentCenterY - distance,
+          x = 0,
+          y = -distance,
           font = native.systemFont,
           fontSize = fontSizeUi
      })
 
      local valueSet = loadVolumeSetting()
 
-     volumeSlider = widget.newSlider({
-        x = display.contentCenterX,
-        y = display.contentCenterY,
-        width = 100,
+     local volumeSlider = widget.newSlider({
+        x = 0, y = 0,
+        width = btnWidth,
         value = valueSet,
         listener = onSliderChanged
      })
-     sceneGroup:insert(volumeSlider)
+     menuGroup:insert(volumeSlider)
 
-     backBtn = newBackBtn(sceneGroup, display.contentCenterX,
-     display.contentCenterY + distance * 1.5, "scene.optionsMenu")
+     backBtn = newBackButton(menuGroup, distance, "scene.optionsMenu", fromMainMenu)
+
+     local menuBackground = newMenuBackgroundH(menuGroup,
+          volumeText.height + volumeSlider.height + btnHeight)
+     menuBackground:toBack()
 
 end
 
