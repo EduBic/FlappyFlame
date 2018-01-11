@@ -4,11 +4,11 @@ local json = require( "json" )
 --- DEBUG function -----------------
 
 local function printTable(table)
-     print("JsonUtils: printTable")
-     print(table.volume)
-     print(table.style)
-     print(table.highestScore)
-     print("\n")
+     -- print("JsonUtils: printTable")
+     -- print(table.volume)
+     -- print(table.style)
+     -- print(table.highestScore)
+     -- print(table.showHelp)
 
      -- for index, data in ipairs(table) do
      --      print(index)
@@ -81,7 +81,7 @@ function loadVolumeSetting()
      local gameSettings = loadDataSetting()
 
      if gameSettings.volume == nil then
-          gameSettings.volume = 42 -- default value
+          gameSettings.volume = 0.42 -- default value
      end
 
      return gameSettings.volume
@@ -151,6 +151,33 @@ function saveHighestScoreSetting(newValue)
      else
           gameSettings = {}
           gameSettings.highestScore = newValue
+     end
+
+     saveDataSetting(gameSettings)
+end
+
+function loadShowHelpSetting()
+     print("logging: loadHighestScoreSetting")
+
+     local gameSettings = loadDataSetting()
+
+     if gameSettings.showHelp == nil then
+          gameSettings.showHelp = true -- default value
+     end
+
+     return gameSettings.showHelp
+end
+
+function saveShowHelpSetting(newValue)
+     print("logging: saveHighestScoreSetting")
+
+     local gameSettings = loadDataSetting()
+
+     if (gameSettings ~= nil) then
+          gameSettings.showHelp = newValue
+     else
+          gameSettings = {}
+          gameSettings.showHelp = newValue
      end
 
      saveDataSetting(gameSettings)

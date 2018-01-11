@@ -10,7 +10,7 @@ local scene = composer.newScene()
 ------------------------------------------------------------------------------
 
 local physics = require( "physics" )
-physics.start()
+--physics.start()
 physics.setGravity( 0, 9.8 )
 
 local runtime = 0
@@ -33,7 +33,7 @@ local _isGameLost = false
 
 -- Options game elements
 local playerRadius = 10
-local playerStartX = display.contentCenterX - 80
+local playerStartX = display.contentCenterX - 100
 local playerStartY = display.contentCenterY
 
 local wallStartWidth = display.contentWidth + 30
@@ -92,6 +92,8 @@ onEnterFrame = function()
      moveWalls(scene, topWalls, bottomWalls, player, function()
           score = score + 1
           scoreText.text = "SCORE: " .. score
+          -- Player leart how to play
+          saveShowHelpSetting(false)
           print("logging: new point!")
      end)
 
@@ -276,7 +278,7 @@ local function onCollision(event)
 
         deathSound = audio.loadSound( "assets/thud.mp3" )
         audio.play(deathSound, { channel = 3})
-        
+
         timer.performWithDelay( 1005, function()
              audio.stop(2)
         end)
@@ -319,16 +321,28 @@ function scene:show( event )
      local phase = event.phase
      print("Game-scene show " .. phase)
 
+     local playerMustLearn = loadShowHelpSetting()
+
      if ( phase == "will" ) then
-          physics.start()
+
+          if playerMustLearn then
+               pauseBtn.isVisible = false
+               composer.showOverlay( "scene.helpGame", {
+                    isModal = true,
+                    params = { isGameLost = _isGameLost }
+               } )
+               physics.pause()
+          end
           --Runtime:addEventListener("enterFrame", onEnterFrame)
      elseif ( phase == "did" ) then
-          print("logging: add listeners")
-          Runtime:addEventListener("enterFrame", onEnterFrame)
-          Runtime:addEventListener("collision", onCollision )
-          Runtime:addEventListener("tap", pushPlayer)
-          Runtime:addEventListener("accelerometer", onTilt )
-          Runtime:addEventListener("key", onKeyEvent )
+          if playerMustLearn == false then
+               print("logging: add listeners")
+               Runtime:addEventListener("enterFrame", onEnterFrame)
+               Runtime:addEventListener("collision", onCollision )
+               Runtime:addEventListener("tap", pushPlayer)
+               Runtime:addEventListener("accelerometer", onTilt )
+               Runtime:addEventListener("key", onKeyEvent )
+          end
           --gameLoopTimer = timer.performWithDelay( 500, gameLoop, 0 )
           audio.setVolume( loadVolumeSetting(), { channel=2 } )
           audio.play( gameMusic, { channel=2, loops=-1, fadein=1000 } )
@@ -367,8 +381,12 @@ end
 
 function scene:onResume()
      pauseBtn.isVisible = true
+     print("logging: add listeners")
      Runtime:addEventListener("enterFrame", onEnterFrame)
+     Runtime:addEventListener("collision", onCollision )
      Runtime:addEventListener("tap", pushPlayer)
+     Runtime:addEventListener("accelerometer", onTilt )
+     Runtime:addEventListener("key", onKeyEvent )
      physics.start()
 end
 
