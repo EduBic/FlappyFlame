@@ -266,18 +266,16 @@ local function onCollision(event)
      if (checkCollision(obj1, obj2, "player", "wall")) or
         (checkCollision(obj1, obj2, "player", "bounder")) then
 
+        audio.fadeOut( { channel=2, time=1000 } )
+        audio.play(deathMusic, { channel=3, loops=-1, fadein=500 })
+
         local oldHighestScore = loadHighestScoreSetting()
         if score > oldHighestScore then
-             saveHighestScoreSetting(score)
+             saveHighestScoreSetting(scorq   e)
         end
 
         player.myName = "deathPlayer"
         _isGameLost = true
-
-        audio.fadeOut( { channel=2, time=1000 } )
-
-        deathSound = audio.loadSound( "assets/thud.mp3" )
-        audio.play(deathSound, { channel = 3})
 
         timer.performWithDelay( 1005, function()
              audio.stop(2)
@@ -312,6 +310,7 @@ function scene:create( event )
      addGameUi(gameUiGroup)
 
      gameMusic = audio.loadStream("assets/Battle.mp3")
+     deathMusic = audio.loadStream( "assets/DeathMusic.mp3" )
 
      print("Game-scene object: ")
      print(scene)

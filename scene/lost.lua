@@ -12,6 +12,7 @@ local scene = composer.newScene()
 ------- Functions callbacks -----------------------------------------------
 
 local function restart(event)
+     audio.stop(3)
      composer.gotoScene("scene.refresh")
 
      return true
