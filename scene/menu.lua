@@ -16,7 +16,7 @@ function scene:create( event )
 
 	local titleText = display.newText( sceneGroup, "FLAPPY FLAME",
                      				display.contentCenterX, topLeftY + 40,
-	                                   native.systemFontBold, 35 )
+	                                   native.systemFontBold, 46 )
 	titleText:setFillColor(1,1,1)
 
 	local bg = display.newImageRect(sceneGroup, "assets/background.png",
