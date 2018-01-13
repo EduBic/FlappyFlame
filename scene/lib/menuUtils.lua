@@ -13,7 +13,7 @@ local function joinMyTables(t1, t2)
 end
 
 -- Global Variables
-btnHeight = 28
+btnHeight = 40
 btnWidth = 230
 fromTopYdefault = 62
 marginTop = 8
@@ -125,26 +125,6 @@ end
 
 -- Main menu settings
 
-local function gotoGame()
-	composer.gotoScene( "scene.game" ) --, { time=800, effect="crossFade" }
-end
-
-local function gotoHelp()
-end
-
-local function gotoOptions()
-     composer.gotoScene( "scene.optionsMenu" )
-end
-
-local function gotoHighestScore()
-	composer.gotoScene( "scene.highestScore" )
-end
-
-local function exit()
-     native.requestExit()
-end
-
-
 function newMainMenu(scene, fromTopY)
      fromTopY = fromTopY or fromTopYdefault
 
@@ -155,8 +135,7 @@ function newMainMenu(scene, fromTopY)
 	local playBtn = widget.newButton({
 		label = "Resume",
 		x = display.contentCenterX,
-		y = topLeftY + fromTopY,
-		--onRelease = gotoGame,
+		y = display.contentCenterY, --topLeftY + fromTopY,
 		-- style
 		labelColor = mLabelColors,
 		shape = "roundedRect",
@@ -170,29 +149,28 @@ function newMainMenu(scene, fromTopY)
 	scene:insert(playBtn)
      buttons.playBtn = playBtn
 
-	local helpBtn = widget.newButton({
-		label = "Help",
-		left = playBtn.x - btnWidth/2 - mStrokeWidth/2,
-		top = playBtn.y + btnHeight/2 + marginTop,
-		--onRelease = gotoHelp,
-		-- style
-		labelColor = mLabelColors,
-		fillColor = mFillColors,
-		shape = "roundedRect",
-		width = btnWidth,
-		height = btnHeight,
-		cornerRadius = 2,
-          strokeColor = mStrokeFillColors,
-          strokeWidth = mStrokeWidth
-	})
-	scene:insert(helpBtn)
-     buttons.helpBtn = helpBtn
+	-- local helpBtn = widget.newButton({
+	-- 	label = "Help",
+	-- 	left = playBtn.x - btnWidth/2 - mStrokeWidth/2,
+	-- 	top = playBtn.y + btnHeight/2 + marginTop,
+	-- 	--onRelease = gotoHelp,
+	-- 	-- style
+	-- 	labelColor = mLabelColors,
+	-- 	fillColor = mFillColors,
+	-- 	shape = "roundedRect",
+	-- 	width = btnWidth,
+	-- 	height = btnHeight,
+	-- 	cornerRadius = 2,
+     --      strokeColor = mStrokeFillColors,
+     --      strokeWidth = mStrokeWidth
+	-- })
+	-- scene:insert(helpBtn)
+     -- buttons.helpBtn = helpBtn
 
 	local optionsBtn = widget.newButton({
 		label = "Options",
-		left = helpBtn.x - btnWidth/2 - mStrokeWidth/2,
-		top = helpBtn.y + btnHeight/2 + marginTop,
-          --onRelease = gotoOptions,
+		left =  playBtn.x  - btnWidth/2 - mStrokeWidth/2,
+		top = playBtn.y + btnHeight/2 + marginTop,
 		-- style
 		labelColor = mLabelColors,
 		fillColor = mFillColors,
@@ -206,47 +184,45 @@ function newMainMenu(scene, fromTopY)
 	scene:insert(optionsBtn)
      buttons.optionsBtn = optionsBtn
 
-	local bestscoreBtn = widget.newButton({
-		label = "Best Score",
-		left = optionsBtn.x - btnWidth/2 - mStrokeWidth/2,
-		top = optionsBtn.y + btnHeight/2 + marginTop,
-		--onRelease = gotoHighestScore,
-		-- style
-		labelColor = mLabelColors,
-		fillColor = mFillColors,
-		shape = "roundedRect",
-		width = btnWidth,
- 		height = btnHeight,
-        	cornerRadius = 2,
-          strokeColor = mStrokeFillColors,
-          strokeWidth = mStrokeWidth
-	})
-	scene:insert(bestscoreBtn)
-     buttons.bestscoreBtn = bestscoreBtn
+	-- local bestscoreBtn = widget.newButton({
+	-- 	label = "Best Score",
+	-- 	left = optionsBtn.x - btnWidth/2 - mStrokeWidth/2,
+	-- 	top = optionsBtn.y + btnHeight/2 + marginTop,
+	-- 	-- style
+	-- 	labelColor = mLabelColors,
+	-- 	fillColor = mFillColors,
+	-- 	shape = "roundedRect",
+	-- 	width = btnWidth,
+ 	-- 	height = btnHeight,
+     --    	cornerRadius = 2,
+     --      strokeColor = mStrokeFillColors,
+     --      strokeWidth = mStrokeWidth
+	-- })
+	-- scene:insert(bestscoreBtn)
+     -- buttons.bestscoreBtn = bestscoreBtn
 
-     local exitBtn = widget.newButton({
-		label = "Exit",
-		left = bestscoreBtn.x - btnWidth/2 - mStrokeWidth/2,
-		top = bestscoreBtn.y + btnHeight/2 + marginTop,
-		onRelease = exit,
-		-- style
-		labelColor = mLabelColors,
-		fillColor = mFillColors,
-		shape = "roundedRect",
-		width = btnWidth,
- 		height = btnHeight,
-        	cornerRadius = 2,
-          strokeColor = mStrokeFillColors,
-          strokeWidth = mStrokeWidth
-	})
-	scene:insert(exitBtn)
-     buttons.exitBtn = exitBtn
+     -- local exitBtn = widget.newButton({
+	-- 	label = "Exit",
+	-- 	left = bestscoreBtn.x - btnWidth/2 - mStrokeWidth/2,
+	-- 	top = bestscoreBtn.y + btnHeight/2 + marginTop,
+	-- 	onRelease = exit,
+	-- 	-- style
+	-- 	labelColor = mLabelColors,
+	-- 	fillColor = mFillColors,
+	-- 	shape = "roundedRect",
+	-- 	width = btnWidth,
+ 	-- 	height = btnHeight,
+     --    	cornerRadius = 2,
+     --      strokeColor = mStrokeFillColors,
+     --      strokeWidth = mStrokeWidth
+	-- })
+	-- scene:insert(exitBtn)
+     -- buttons.exitBtn = exitBtn
 
-     local menuBackground = newMenuBackgroundH(scene, 164)
+     local menuBackground = newMenuBackgroundH(scene, btnHeight*2)
 
-     -- local menuBackground = display.newRect(0, 0, btnWidth + 26, 190)
 	menuBackground.x = playBtn.x
-	menuBackground.y = optionsBtn.y
+	menuBackground.y = playBtn.y + (optionsBtn.y - playBtn.y)/2
 	-- menuBackground.alpha = 0.28
 	-- menuBackground:setFillColor(255/255, 165/255, 0/255)
 

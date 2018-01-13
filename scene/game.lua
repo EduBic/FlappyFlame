@@ -11,7 +11,7 @@ local scene = composer.newScene()
 
 local physics = require( "physics" )
 --physics.start()
-physics.setGravity( 0, 9.8 )
+--physics.setGravity( 0, 9.8 )
 
 local runtime = 0
 
@@ -199,15 +199,15 @@ local function addGameUi(group)
           x = display.contentCenterX,
           y = bottomRightY - 15,
           font = native.systemFont,
-          fontSize = 15,
+          fontSize = 16,
           align = "center"
      })
      group:insert(scoreText)
 
-     local size = 36
-     local margin = 3
+     local size = 38
+     local margin = 5
 
-     pauseBtn = display.newImageRect("assets/OptionButton.png", size, size)
+     pauseBtn = display.newImageRect("assets/gear.png", size, size)
 	pauseBtn.x = topLeftX + pauseBtn.width / 2 + margin
      pauseBtn.y = topLeftY + pauseBtn.height / 2 + margin
 	pauseBtn:addEventListener("tap", onPause)
@@ -271,7 +271,7 @@ local function onCollision(event)
 
         local oldHighestScore = loadHighestScoreSetting()
         if score > oldHighestScore then
-             saveHighestScoreSetting(scorq   e)
+             saveHighestScoreSetting(score)
         end
 
         player.myName = "deathPlayer"
@@ -299,6 +299,7 @@ function scene:create( event )
      local sceneGroup = self.view -- add display objects to this group
 
      physics.start()
+     physics.setGravity( 0, 9.8 )
 
      addBackgrounds(sceneGroup)
      addWalls(sceneGroup, topWalls, bottomWalls)

@@ -41,14 +41,14 @@ function scene:create( event )
 
      local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
 
-     local distance = 36
+     local distance = 8
 
      local background = newMenuBackgroundH(menuGroup, btnHeight*3)
 
      local volumeBtn = widget.newButton({
           label = "Volume",
           x = 0,
-          y = 0 - distance,
+          y = 0 - btnHeight - distance,
           labelColor = mLabelColors,
           shape = "roundedRect",
           width = btnWidth,
@@ -80,7 +80,7 @@ function scene:create( event )
 
 
      local backBtn = newBackButton(menuGroup,
-          distance, "scene.pauseMenu", mParams)
+          btnHeight + distance, "scene.pauseMenu", mParams)
 end
 
 function scene:show( event )

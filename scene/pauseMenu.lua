@@ -9,10 +9,17 @@ local scene = composer.newScene()
 -- display elements
 local buttons
 
+local helpBtn, bestScoreBtn, exitBtn
+
 local fromMainMenu = false
 local isGameLost = false
 
 local bgMusic
+
+-- Global settings
+local btnSize = 44
+local btnZoomSize = 10
+local margin = 8
 
 -------- FUNCTION LISTENER --------------------------------------------------
 
@@ -56,10 +63,21 @@ local function onRestartTapped(event)
 end
 
 local function onHelpTapped(event)
-     composer.showOverlay( "scene.helpMenu", {
-          isModal = true,
-          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
-     } )
+     local phase = event.phase
+
+     if phase == "began" then
+          helpBtn.width = btnSize + btnZoomSize
+          helpBtn.height = btnSize + btnZoomSize
+     elseif phase == "ended" then
+          helpBtn.width = btnSize
+          helpBtn.height = btnSize
+
+          composer.showOverlay( "scene.helpMenu", {
+               isModal = true,
+               params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
+          })
+     end
+
      return true
 end
 
@@ -73,16 +91,36 @@ local function onOptionsTapped(event)
 end
 
 local function onBestScoreTapped(event)
-     composer.showOverlay( "scene.highestScore", {
-          isModal = true,
-          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
-     } )
+     local phase = event.phase
+
+     if phase == "began" then
+          bestScoreBtn.width = btnSize + btnZoomSize
+          bestScoreBtn.height = btnSize + btnZoomSize
+     elseif phase == "ended" then
+          bestScoreBtn.width = btnSize
+          bestScoreBtn.height = btnSize
+
+          composer.showOverlay( "scene.highestScore", {
+               isModal = true,
+               params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
+          })
+     end
 
      return true
 end
 
 local function onExitTapped(event)
-     native.requestExit()
+     local phase = event.phase
+
+     if phase == "began" then
+          exitBtn.width = btnSize + btnZoomSize
+          exitBtn.height = btnSize + btnZoomSize
+     elseif phase == "ended" then
+          exitBtn.width = btnSize
+          exitBtn.height = btnSize
+
+          native.requestExit()
+     end
 
      return true
 end
@@ -112,10 +150,33 @@ function scene:create( event )
           buttons.playBtn:addEventListener("tap", onResumeTapped)
      end
 
-     buttons.helpBtn:addEventListener("tap", onHelpTapped)
      buttons.optionsBtn:addEventListener("tap", onOptionsTapped)
-     buttons.bestscoreBtn:addEventListener("tap", onBestScoreTapped)
-     buttons.exitBtn:addEventListener("tap", onExitTapped)
+
+
+     exitBtn = display.newImageRect(sceneGroup, "assets/exitRight.png",
+          btnSize, btnSize)
+     exitBtn.x = bottomRightX - btnSize/2 - margin
+     exitBtn.y = bottomRightY - btnSize/2 - margin
+     exitBtn:addEventListener("touch", onExitTapped)
+
+     helpBtn = display.newImageRect(sceneGroup, "assets/information.png",
+          btnSize, btnSize)
+     helpBtn.x = bottomRightX - btnSize/2 - margin
+     helpBtn.y = topLeftY + btnSize/2 + margin
+     helpBtn:addEventListener("touch", onHelpTapped)
+
+     -- help background
+     --local helpBg = display.newCircle( helpBtn.x, helpBtn.y, 20 )
+     --helpBg:setFillColor()
+     --helpBg:toBack()
+
+
+     bestScoreBtn = display.newImageRect(sceneGroup, "assets/trophy.png",
+          btnSize, btnSize)
+     bestScoreBtn.x = topLeftX + btnSize/2 + margin
+     bestScoreBtn.y = bottomRightY - btnSize/2 - margin
+     bestScoreBtn:addEventListener("touch", onBestScoreTapped)
+
 
      bgMusic = audio.loadStream( "assets/TitleScreen.mp3" )
 end

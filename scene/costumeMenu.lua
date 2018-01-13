@@ -33,7 +33,7 @@ local function buildStyleUi(scene, fileName, pos)
      local frameColor = { 1, 1, 1, 0.4 }
 
      styleFrame:setFillColor(unpack(frameColor))
-     
+
      styleFrame.strokeWidth = 1
      styleFrame:setStrokeColor(unpack(mMainColor))
      styleFrame.alpha = 0.42
@@ -80,22 +80,22 @@ function scene:create( event )
 
      local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
 
-     local distance = 48
-
-     local infoText = display.newText( {
-          parent = menuGroup,
-          text = "Select your flame style:",
-          x = 0, y = -distance,
-          font = native.systemFont,
-          fontSize = 19,
-          align = "center"
-     } )
+     local distance = 8
 
      local styleOne = buildStyleUi(menuGroup, "FireballReduced.png", 1.8)
      local styleTwo = buildStyleUi(menuGroup, "FireballReducedBlue.png", 0)
      local styleThree = buildStyleUi(menuGroup, "FireballReducedStrange.png", -1.8)
 
-     local backBtn = newBackButton(menuGroup, distance + 4,
+     local infoText = display.newText( {
+          parent = menuGroup,
+          text = "Select your flame style:",
+          x = 0, y = -styleOne.height - distance,
+          font = native.systemFont,
+          fontSize = 19,
+          align = "center"
+     } )
+
+     local backBtn = newBackButton(menuGroup, styleOne.height + btnHeight/2 + distance,
           "scene.optionsMenu", event.params)
 
      local menuBackground = newMenuBackgroundWH(menuGroup,
