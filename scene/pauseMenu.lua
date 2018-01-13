@@ -1,5 +1,6 @@
 -- Requirements
 local composer = require "composer"
+local widget = require "widget"
 
 local menuUtils = require "scene.lib.menuUtils"
 
@@ -135,22 +136,50 @@ function scene:create( event )
           isGameLost = event.params.isGameLost or false
      end
 
+
+     local playBtn = widget.newButton({
+          parent = sceneGroup,
+		label = "Resume",
+		x = display.contentCenterX,
+		y = display.contentCenterY, --topLeftY + fromTopY,
+		-- style
+		labelColor = mLabelColors,
+		shape = "roundedRect",
+		width = btnWidth,
+		height = btnHeight,
+		cornerRadius = 2,
+		fillColor = mFillColors,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
+	})
+
      if fromMainMenu then
-          buttons = newMainMenu(sceneGroup, 90)
-
-          buttons.playBtn:setLabel("Play")
-          buttons.playBtn:addEventListener("tap", onPlayTapped)
+          playBtn:setLabel("Play")
+          playBtn:addEventListener("tap", onPlayTapped)
      elseif isGameLost then
-          buttons = newMainMenu(sceneGroup)
-
-          buttons.playBtn:setLabel("Restart")
-          buttons.playBtn:addEventListener("tap", onRestartTapped)
+          playBtn:setLabel("Restart")
+          playBtn:addEventListener("tap", onRestartTapped)
      else
-          buttons = newMainMenu(sceneGroup)
-          buttons.playBtn:addEventListener("tap", onResumeTapped)
+          playBtn:addEventListener("tap", onResumeTapped)
      end
 
-     buttons.optionsBtn:addEventListener("tap", onOptionsTapped)
+
+     local optionsBtn = widget.newButton({
+          parent = sceneGroup,
+		label = "Options",
+		left =  playBtn.x  - btnWidth/2 - mStrokeWidth/2,
+		top = playBtn.y + btnHeight/2 + marginTop,
+		-- style
+		labelColor = mLabelColors,
+		fillColor = mFillColors,
+		shape = "roundedRect",
+		width = btnWidth,
+		height = btnHeight,
+		cornerRadius = 2,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
+	})
+     optionsBtn:addEventListener("tap", onOptionsTapped)
 
 
      exitBtn = display.newImageRect(sceneGroup, "assets/exitRight.png",
@@ -165,11 +194,6 @@ function scene:create( event )
      helpBtn.y = topLeftY + btnSize/2 + margin
      helpBtn:addEventListener("touch", onHelpTapped)
 
-     -- help background
-     --local helpBg = display.newCircle( helpBtn.x, helpBtn.y, 20 )
-     --helpBg:setFillColor()
-     --helpBg:toBack()
-
 
      bestScoreBtn = display.newImageRect(sceneGroup, "assets/trophy.png",
           btnSize, btnSize)
@@ -177,6 +201,11 @@ function scene:create( event )
      bestScoreBtn.y = bottomRightY - btnSize/2 - margin
      bestScoreBtn:addEventListener("touch", onBestScoreTapped)
 
+
+     local menuBackground = newMenuBackgroundH(sceneGroup, btnHeight*2)
+	menuBackground.x = playBtn.x
+	menuBackground.y = playBtn.y + (optionsBtn.y - playBtn.y)/2
+     menuBackground:toBack()
 
      bgMusic = audio.loadStream( "assets/TitleScreen.mp3" )
 end
