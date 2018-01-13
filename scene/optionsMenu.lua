@@ -43,7 +43,7 @@ function scene:create( event )
 
      local distance = 8
 
-     local background = newMenuBackgroundH(menuGroup, btnHeight*3)
+     local background = newMenuBackgroundH(menuGroup, btnHeight*3 + 2*distance)
 
      local volumeBtn = widget.newButton({
           label = "Volume",

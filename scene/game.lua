@@ -80,10 +80,12 @@ end
 -- end
 
 local function moveBackground(background)
-     background.x = background.x - 0.7
-     if (background.x) < (topLeftX - display.contentWidth) then
-        print("logging: restore background pos")
-        background:translate(display.contentWidth * 4, 0)
+     if background.x then
+          background.x = background.x - 0.7
+          if (background.x) < (topLeftX - display.contentWidth) then
+             print("logging: restore background pos")
+             background:translate(display.contentWidth * 4, 0)
+          end
      end
 end
 
