@@ -2,6 +2,7 @@
 local composer = require "composer"
 local widget = require "widget"
 local display = require "display"
+local audio = require "audio"
 
 local menuUtils = require "scene.lib.menuUtils"
 local jsonUtils = require "scene.lib.jsonUtils"
@@ -15,13 +16,21 @@ local menuBackground
 local volumeText
 local volumeSlider
 local backBtn
+local prevValue
+local bgMusic
 
 
 ------- Functions callbacks -----------------------------------------------
 
 local function onSliderChanged(event)
      print( "slider changed" .. event.value)
-     -- TODO change values in json settings
+
+     -- TODO: doesnt' work
+     -- if event.value > 0 then
+     --      print("Play music")
+     --      audio.play( bgMusic, { channel=1, loops=-1 } )
+     -- end
+
      saveVolumeSetting(event.value/100)
      audio.setVolume( event.value/100 )
 
@@ -52,12 +61,12 @@ function scene:create( event )
           fontSize = fontSizeUi
      })
 
-     local valueSet = loadVolumeSetting() * 100
+     prevValue = loadVolumeSetting() * 100
 
      local volumeSlider = widget.newSlider({
         x = 0, y = 0,
         width = btnWidth,
-        value = valueSet,
+        value = prevValue,
         listener = onSliderChanged
      })
      menuGroup:insert(volumeSlider)
@@ -68,6 +77,7 @@ function scene:create( event )
           volumeText.height + volumeSlider.height + btnHeight)
      menuBackground:toBack()
 
+     bgMusic = audio.loadStream( "assets/TitleScreen.mp3" )
 end
 
 

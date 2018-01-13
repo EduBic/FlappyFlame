@@ -7,25 +7,24 @@ local jsonUtils = require "scene.lib.jsonUtils"
 -- Variables local to scene
 local scene = composer.newScene()
 
-------- Display elements --------------------------------------------------
+-------  --------------------------------------------------
+
+local styleWidth = 44
+local styleHeight = btnHeight
+local framePadding = 14
+local upShift = 12
 
 
 ------- Functions -----------------------------------------------
 
 local function buildStyleUi(scene, fileName, pos)
-     local styleWidth = 45
-     local styleHeight = 45
-
-     local distance = 0
-     local framePadding = 14
-
      local style = display.newImageRect(scene, "assets/" .. fileName, styleWidth, styleHeight)
-     style.x = -pos * (styleWidth + distance)
-     style.y = 0
+     style.x = -pos * (styleWidth)
+     style.y = -upShift
 
      local styleFrame = display.newRect(scene,
           -pos * (styleWidth),
-          0,
+          -upShift,
           styleWidth + framePadding,
           styleHeight + framePadding
      )
@@ -89,18 +88,19 @@ function scene:create( event )
      local infoText = display.newText( {
           parent = menuGroup,
           text = "Select your flame style:",
-          x = 0, y = -styleOne.height - distance,
+          x = 0, y = - btnHeight/2 - (styleHeight + framePadding + 2)/2 - distance - upShift,
           font = native.systemFont,
           fontSize = 19,
           align = "center"
      } )
 
-     local backBtn = newBackButton(menuGroup, styleOne.height + btnHeight/2 + distance,
+     local backBtn = newBackButton(menuGroup,
+          (styleOne.height + framePadding)/2 + btnHeight/2 + distance,
           "scene.optionsMenu", event.params)
 
      local menuBackground = newMenuBackgroundWH(menuGroup,
           btnWidth + backgroundMargin,
-          infoText.height + styleOne.height + btnHeight + backgroundMargin + 24)
+          infoText.height + styleOne.height + framePadding + btnHeight + backgroundMargin*2)
      menuBackground:toBack()
 
 end

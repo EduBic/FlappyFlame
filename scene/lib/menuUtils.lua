@@ -17,6 +17,7 @@ btnHeight = 40
 btnWidth = 230
 fromTopYdefault = 62
 marginTop = 8
+mMarginTop = 8
 backgroundMargin = 32
 
 mMenuStrokeWidth = 1.4
@@ -56,13 +57,13 @@ end
 
 -- Create the basic container for a menu
 function newMenuGroup(scene, fromMainMenu)
-     local marginTop = 0
+     local marginFromTop = 0
 
-     if fromMainMenu then marginTop = 28 end
+     if fromMainMenu then marginFromTop = 28 end
 
      mg = display.newGroup()
      mg.x = display.contentCenterX
-     mg.y = display.contentCenterY + marginTop
+     mg.y = display.contentCenterY + marginFromTop
 
      scene:insert(mg)
 

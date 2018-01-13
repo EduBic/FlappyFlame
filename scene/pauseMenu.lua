@@ -18,8 +18,14 @@ local isGameLost = false
 local bgMusic
 
 -- Global settings
-local btnSize = 44
-local btnZoomSize = 10
+local marginIconBtn = 8
+-- btnIconWidth = ??? ; marginIconBtn = 8 -> 8*2 = 16; strokeWidth = 1 -> 1*2*3 = 6
+local btnIconWidth = (btnWidth - marginIconBtn - 2*mStrokeWidth*3)/3 - 0.2
+local btnIconHeigh = btnHeight
+local btnIconSize = btnIconHeigh - 8
+
+
+
 local margin = 8
 
 -------- FUNCTION LISTENER --------------------------------------------------
@@ -64,20 +70,10 @@ local function onRestartTapped(event)
 end
 
 local function onHelpTapped(event)
-     local phase = event.phase
-
-     if phase == "began" then
-          helpBtn.width = btnSize + btnZoomSize
-          helpBtn.height = btnSize + btnZoomSize
-     elseif phase == "ended" then
-          helpBtn.width = btnSize
-          helpBtn.height = btnSize
-
-          composer.showOverlay( "scene.helpMenu", {
-               isModal = true,
-               params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
-          })
-     end
+     composer.showOverlay( "scene.helpMenu", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
+     })
 
      return true
 end
@@ -92,36 +88,16 @@ local function onOptionsTapped(event)
 end
 
 local function onBestScoreTapped(event)
-     local phase = event.phase
-
-     if phase == "began" then
-          bestScoreBtn.width = btnSize + btnZoomSize
-          bestScoreBtn.height = btnSize + btnZoomSize
-     elseif phase == "ended" then
-          bestScoreBtn.width = btnSize
-          bestScoreBtn.height = btnSize
-
-          composer.showOverlay( "scene.highestScore", {
-               isModal = true,
-               params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
-          })
-     end
+     composer.showOverlay( "scene.highestScore", {
+          isModal = true,
+          params = { fromMainMenu = fromMainMenu, isGameLost = isGameLost }
+     })
 
      return true
 end
 
 local function onExitTapped(event)
-     local phase = event.phase
-
-     if phase == "began" then
-          exitBtn.width = btnSize + btnZoomSize
-          exitBtn.height = btnSize + btnZoomSize
-     elseif phase == "ended" then
-          exitBtn.width = btnSize
-          exitBtn.height = btnSize
-
-          native.requestExit()
-     end
+     native.requestExit()
 
      return true
 end
@@ -136,12 +112,13 @@ function scene:create( event )
           isGameLost = event.params.isGameLost or false
      end
 
+     local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
+
 
      local playBtn = widget.newButton({
-          parent = sceneGroup,
 		label = "Resume",
-		x = display.contentCenterX,
-		y = display.contentCenterY, --topLeftY + fromTopY,
+		x = 0,
+		y = - btnHeight - marginTop, --topLeftY + fromTopY,
 		-- style
 		labelColor = mLabelColors,
 		shape = "roundedRect",
@@ -152,6 +129,7 @@ function scene:create( event )
           strokeColor = mStrokeFillColors,
           strokeWidth = mStrokeWidth
 	})
+     menuGroup:insert(playBtn)
 
      if fromMainMenu then
           playBtn:setLabel("Play")
@@ -165,10 +143,8 @@ function scene:create( event )
 
 
      local optionsBtn = widget.newButton({
-          parent = sceneGroup,
 		label = "Options",
-		left =  playBtn.x  - btnWidth/2 - mStrokeWidth/2,
-		top = playBtn.y + btnHeight/2 + marginTop,
+		x = 0, y = 0,
 		-- style
 		labelColor = mLabelColors,
 		fillColor = mFillColors,
@@ -179,32 +155,74 @@ function scene:create( event )
           strokeColor = mStrokeFillColors,
           strokeWidth = mStrokeWidth
 	})
+     menuGroup:insert(optionsBtn)
      optionsBtn:addEventListener("tap", onOptionsTapped)
 
 
-     exitBtn = display.newImageRect(sceneGroup, "assets/exitRight.png",
-          btnSize, btnSize)
-     exitBtn.x = bottomRightX - btnSize/2 - margin
-     exitBtn.y = bottomRightY - btnSize/2 - margin
-     exitBtn:addEventListener("touch", onExitTapped)
+     helpBtn = widget.newButton({
+		x = 0, --playBtn.x  - btnWidth/2 - mStrokeWidth/2,
+		y = btnHeight/2 + marginTop + btnIconHeigh/2,
+		-- style
+          fillColor = mFillColors,
+		shape = "roundedRect",
+		cornerRadius = 2,
+          width = btnIconWidth,
+		height = btnIconHeigh,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
+	})
+     helpBtn:addEventListener("tap", onHelpTapped)
+     menuGroup:insert(helpBtn)
 
-     helpBtn = display.newImageRect(sceneGroup, "assets/information.png",
-          btnSize, btnSize)
-     helpBtn.x = bottomRightX - btnSize/2 - margin
-     helpBtn.y = topLeftY + btnSize/2 + margin
-     helpBtn:addEventListener("touch", onHelpTapped)
+     local helpIcon = display.newImageRect(menuGroup, "assets/question.png",
+          btnIconSize, btnIconSize)
+     helpIcon.x, helpIcon.y = helpBtn.x, helpBtn.y
 
 
-     bestScoreBtn = display.newImageRect(sceneGroup, "assets/trophy.png",
-          btnSize, btnSize)
-     bestScoreBtn.x = topLeftX + btnSize/2 + margin
-     bestScoreBtn.y = bottomRightY - btnSize/2 - margin
-     bestScoreBtn:addEventListener("touch", onBestScoreTapped)
+     exitBtn = widget.newButton({
+		x = btnIconWidth + marginIconBtn,
+		y = btnHeight/2 + btnIconHeigh/2 + marginTop,
+		-- style
+          fillColor = mFillColors,
+		shape = "roundedRect",
+		cornerRadius = 2,
+          width = btnIconWidth,
+		height = btnIconHeigh,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
+	})
+     exitBtn:addEventListener("tap", onExitTapped)
+     menuGroup:insert(exitBtn)
+
+     local exitIcon = display.newImageRect(menuGroup, "assets/exitRight.png",
+          btnIconSize, btnIconSize)
+     exitIcon.x, exitIcon.y = exitBtn.x, exitBtn.y
 
 
-     local menuBackground = newMenuBackgroundH(sceneGroup, btnHeight*2)
-	menuBackground.x = playBtn.x
-	menuBackground.y = playBtn.y + (optionsBtn.y - playBtn.y)/2
+     bestscoreBtn = widget.newButton({
+		x = - btnIconWidth - marginIconBtn,
+		y = btnHeight/2 + btnIconHeigh/2 + marginTop,
+		-- style
+          fillColor = mFillColors,
+		shape = "roundedRect",
+		cornerRadius = 2,
+          width = btnIconWidth,
+		height = btnIconHeigh,
+          strokeColor = mStrokeFillColors,
+          strokeWidth = mStrokeWidth
+	})
+     bestscoreBtn:addEventListener("tap", onBestScoreTapped)
+     menuGroup:insert(bestscoreBtn)
+
+     bestScoreBtn = display.newImageRect(menuGroup, "assets/trophy.png",
+          btnIconSize, btnIconSize)
+     bestScoreBtn.x, bestScoreBtn.y = bestscoreBtn.x,bestscoreBtn.y
+
+
+     local menuBackground = newMenuBackgroundH(menuGroup,
+          btnHeight*2 + btnIconHeigh + marginTop*2)
+	menuBackground.x = 0
+	menuBackground.y = 0
      menuBackground:toBack()
 
      bgMusic = audio.loadStream( "assets/TitleScreen.mp3" )
