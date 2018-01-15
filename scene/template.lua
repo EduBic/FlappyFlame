@@ -14,7 +14,7 @@ local scene = composer.newScene()
 ----------------------------------------------------------------------------
 
 function scene:create( event )
-  local sceneGroup = self.view -- add display objects to this group
+     local sceneGroup = self.view -- add display objects to this group
 
 end
 

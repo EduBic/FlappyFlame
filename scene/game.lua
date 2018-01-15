@@ -329,7 +329,7 @@ function scene:show( event )
 
           if playerMustLearn then
                pauseBtn.isVisible = false
-               composer.showOverlay( "scene.helpGame", {
+               composer.showOverlay( "scene.helpShakeGame", {
                     isModal = true,
                     params = { isGameLost = _isGameLost }
                } )
