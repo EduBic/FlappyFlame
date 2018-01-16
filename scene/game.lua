@@ -78,7 +78,6 @@ end
 --    runtime = temp
 --    return dt
 -- end
-
 local function moveBackground(background)
      if background.x then
           background.x = background.x - 0.7
@@ -101,6 +100,7 @@ onEnterFrame = function()
 
      moveBackground(background1)
      moveBackground(background2)
+
 end
 
 onPause = function(event)

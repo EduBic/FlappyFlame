@@ -31,11 +31,17 @@ function scene:create( event )
 		text = infoTxt, -- "Tap to jump, don't hit the\nstalagmites and do your best",
 		x = 0, y = -distance - 20,
 		font = system.native,
-		fontSize = 17,
+		fontSize = 18,
 		align = "left"
-	} )
+	})
 
-	local menuBackground = newMenuBackgroundH(menuGroup, infoView.height + btnHeight)
+     local textBack = display.newRect(menuGroup, infoView.x, infoView.y,
+          infoView.width + 10, infoView.height + 10)
+     textBack:toBack()
+     textBack:setFillColor(1,172/255,0,0.42)
+
+	local menuBackground = newMenuBackgroundH(menuGroup,
+          infoView.height + btnHeight + 5)
 	menuBackground:toBack()
 
 	local backBtn = newBackButton(menuGroup, infoView.height/2 + distance,
