@@ -53,7 +53,7 @@ function scene:create( event )
      params = event.params
 
      image = display.newImageRect( sceneGroup, "assets/instruction_tap.png",
-          76, 76)
+          70, 70)
      image.x = display.contentCenterX
      image.y = display.contentCenterY + 40
 

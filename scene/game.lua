@@ -107,19 +107,35 @@ onPause = function(event)
      print("logging: onPause")
      pauseBtn.isVisible = false
 
-     audio.fadeOut( { channel=2, time=1000 } )
-     timer.performWithDelay( 1005, function()
+     local channelActive = 2
+     if _isGameLost then channelActive = 3 end
+
+     audio.fadeOut( { channel=channelActive, time=1000 } )
+     timer.performWithDelay(1005, function()
           audio.stop(2)
      end)
+
+     print("logging: remove listeners")
      Runtime:removeEventListener("enterFrame", onEnterFrame)
+     Runtime:removeEventListener("tap", pushPlayer)
+     Runtime:removeEventListener("collision", onCollision)
+     Runtime:removeEventListener("accelerometer", onTilt)
+     Runtime:removeEventListener("key", onKeyEvent )
      physics.pause()
 
-     Runtime:removeEventListener("tap", pushPlayer)
+     local showPauseHelp = loadShowPauseHelpSetting()
 
-     composer:showOverlay("scene.pauseMenu", {
-          isModal = true,
-          params={ isGameLost = _isGameLost }
-     })
+     if showPauseHelp and not _isGameLost then
+          composer.showOverlay( "scene.helpShakeGame", {
+               isModal = true,
+               params = { isGameLost = _isGameLost }
+          })
+     else
+          composer:showOverlay("scene.pauseMenu", {
+               isModal = true,
+               params={ isGameLost = _isGameLost }
+          })
+     end
 
      return true
 end
@@ -159,15 +175,9 @@ local function addPlayer(scene)
 
      local style = loadStyleSetting()
 
-     -- player = display.newCircle( scene,
-     --                             playerStartX,
-     --                             playerStartY,
-     --                             playerRadius )
      player = display.newImageRect( scene, style, 20, 20 )
 	player.x = playerStartX
 	player.y = playerStartY
-
-     --player.myName = "player"
      player.myName = "player"
 
      physics.addBody( player, "dynamic", {
@@ -238,7 +248,7 @@ local swapImage = function(oldImage, imageFile, width, height)
      physics.addBody( newImage, "dynamic", {
           density = 0.2,
           bounce = 0.3
-     } )
+     })
 
      return newImage
 end
@@ -329,7 +339,7 @@ function scene:show( event )
 
           if playerMustLearn then
                pauseBtn.isVisible = false
-               composer.showOverlay( "scene.helpShakeGame", {
+               composer.showOverlay( "scene.helpTapGame", {
                     isModal = true,
                     params = { isGameLost = _isGameLost }
                } )

@@ -19,8 +19,8 @@ local bgMusic
 
 -- Global settings
 local marginIconBtn = 8
--- btnIconWidth = ??? ; marginIconBtn = 8 -> 8*2 = 16; strokeWidth = 1 -> 1*2*3 = 6
-local btnIconWidth = (btnWidth - marginIconBtn - 2*mStrokeWidth*3)/3 - 0.2
+-- btnIconWidth = ??? ; marginIconBtn = 8 -> 8*2 = 16; strokeWidth = 1 -> 1*2 = 6
+local btnIconWidth = (btnWidth - marginIconBtn)/2
 local btnIconHeigh = btnHeight
 local btnIconSize = btnIconHeigh - 8
 
@@ -160,7 +160,7 @@ function scene:create( event )
 
 
      helpBtn = widget.newButton({
-		x = 0, --playBtn.x  - btnWidth/2 - mStrokeWidth/2,
+		x = btnIconWidth/2 + marginIconBtn/2, --playBtn.x  - btnWidth/2 - mStrokeWidth/2,
 		y = btnHeight/2 + marginTop + btnIconHeigh/2,
 		-- style
           fillColor = mFillColors,
@@ -179,28 +179,28 @@ function scene:create( event )
      helpIcon.x, helpIcon.y = helpBtn.x, helpBtn.y
 
 
-     exitBtn = widget.newButton({
-		x = btnIconWidth + marginIconBtn,
-		y = btnHeight/2 + btnIconHeigh/2 + marginTop,
-		-- style
-          fillColor = mFillColors,
-		shape = "roundedRect",
-		cornerRadius = 2,
-          width = btnIconWidth,
-		height = btnIconHeigh,
-          strokeColor = mStrokeFillColors,
-          strokeWidth = mStrokeWidth
-	})
-     exitBtn:addEventListener("tap", onExitTapped)
-     menuGroup:insert(exitBtn)
+     -- exitBtn = widget.newButton({
+	-- 	x = btnIconWidth + marginIconBtn,
+	-- 	y = btnHeight/2 + btnIconHeigh/2 + marginTop,
+	-- 	-- style
+     --      fillColor = mFillColors,
+	-- 	shape = "roundedRect",
+	-- 	cornerRadius = 2,
+     --      width = btnIconWidth,
+	-- 	height = btnIconHeigh,
+     --      strokeColor = mStrokeFillColors,
+     --      strokeWidth = mStrokeWidth
+	-- })
+     -- exitBtn:addEventListener("tap", onExitTapped)
+     -- menuGroup:insert(exitBtn)
 
-     local exitIcon = display.newImageRect(menuGroup, "assets/exitRight.png",
-          btnIconSize, btnIconSize)
-     exitIcon.x, exitIcon.y = exitBtn.x, exitBtn.y
+     -- local exitIcon = display.newImageRect(menuGroup, "assets/exitRight.png",
+     --      btnIconSize, btnIconSize)
+     -- exitIcon.x, exitIcon.y = exitBtn.x, exitBtn.y
 
 
      bestscoreBtn = widget.newButton({
-		x = - btnIconWidth - marginIconBtn,
+		x = -btnIconWidth/2 - marginIconBtn/2,
 		y = btnHeight/2 + btnIconHeigh/2 + marginTop,
 		-- style
           fillColor = mFillColors,

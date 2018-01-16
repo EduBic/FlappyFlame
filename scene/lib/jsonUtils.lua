@@ -4,11 +4,12 @@ local json = require( "json" )
 --- DEBUG function -----------------
 
 local function printTable(table)
-     -- print("JsonUtils: printTable")
-     -- print(table.volume)
-     -- print(table.style)
-     -- print(table.highestScore)
-     -- print(table.showHelp)
+     print("JsonUtils: printTable")
+     print(table.volume)
+     print(table.style)
+     print(table.highestScore)
+     print(table.showHelp)
+     print(table.showPauseHelp)
 
      -- for index, data in ipairs(table) do
      --      print(index)
@@ -157,7 +158,7 @@ function saveHighestScoreSetting(newValue)
 end
 
 function loadShowHelpSetting()
-     print("logging: loadHighestScoreSetting")
+     print("logging: loadShowHelpSetting")
 
      local gameSettings = loadDataSetting()
 
@@ -169,7 +170,7 @@ function loadShowHelpSetting()
 end
 
 function saveShowHelpSetting(newValue)
-     print("logging: saveHighestScoreSetting")
+     print("logging: saveShowHelpSetting")
 
      local gameSettings = loadDataSetting()
 
@@ -178,6 +179,33 @@ function saveShowHelpSetting(newValue)
      else
           gameSettings = {}
           gameSettings.showHelp = newValue
+     end
+
+     saveDataSetting(gameSettings)
+end
+
+function loadShowPauseHelpSetting()
+     print("logging: loadShowPauseHelpSetting")
+
+     local gameSettings = loadDataSetting()
+
+     if gameSettings.showPauseHelp == nil then
+          gameSettings.showPauseHelp = true -- default value
+     end
+
+     return gameSettings.showPauseHelp
+end
+
+function saveShowPauseHelpSetting(newValue)
+     print("logging: saveShowPauseHelpSetting")
+
+     local gameSettings = loadDataSetting()
+
+     if (gameSettings ~= nil) then
+          gameSettings.showPauseHelp = newValue
+     else
+          gameSettings = {}
+          gameSettings.showPauseHelp = newValue
      end
 
      saveDataSetting(gameSettings)

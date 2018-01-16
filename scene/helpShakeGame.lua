@@ -2,6 +2,8 @@
 local composer = require "composer"
 local display = require "display"
 
+local jsonUtils = require "scene.lib.jsonUtils"
+
 -- Variables local to scene
 local scene = composer.newScene()
 
@@ -66,17 +68,24 @@ end
 local function onTap(event)
      print("Tapped screen")
 
-     composer.showOverlay( "scene.helpTapGame", {
-          isModal = true,
-          params = params
-     })
+     -- composer.showOverlay( "scene.pauseMenu", {
+     --      isModal = true,
+     --      params = params
+     -- })
 
      return true
 end
 
 local function onTilt(event)
+     print("Tilt screen")
      if event.isShake then
-          onTap()
+          -- player learn how to use shake feature
+          saveShowPauseHelpSetting(false)
+
+          composer.showOverlay( "scene.pauseMenu", {
+               isModal = true,
+               params = params
+          })
      end
 
      return true
@@ -96,7 +105,7 @@ function scene:create( event )
 
      textView = display.newText({
           parent = sceneGroup,
-          text = "Shake your device to pause the game",
+          text = "You can also shake your device\nto pause the game",
           x = display.contentCenterX,
           y = display.contentCenterY - 38,
           font = native.systemFont,

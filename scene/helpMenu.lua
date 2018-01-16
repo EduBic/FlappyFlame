@@ -18,23 +18,27 @@ function scene:create( event )
 		fromMainMenu = event.params.fromMainMenu or false
 	end
 
-	local distance = 26
+	local distance = 8
 
 	local menuGroup = newMenuGroup(sceneGroup, fromMainMenu)
 
+     local infoTxt = "Tap screen to jump. " ..
+          "Don't hit\nthe stalagmites, the floor or\nthe sky and do your best.\n" ..
+          "You can shake your device\nto pause the game."
+
 	local infoView = display.newText( {
 		parent = menuGroup,
-		text = "Tap to jump, don't hit the\nstalagmites and do your best",
-		x = 0, y = -distance,
+		text = infoTxt, -- "Tap to jump, don't hit the\nstalagmites and do your best",
+		x = 0, y = -distance - 20,
 		font = system.native,
-		fontSize = 18,
-		align = "center"
+		fontSize = 17,
+		align = "left"
 	} )
 
 	local menuBackground = newMenuBackgroundH(menuGroup, infoView.height + btnHeight)
 	menuBackground:toBack()
 
-	local backBtn = newBackButton(menuGroup, distance,
+	local backBtn = newBackButton(menuGroup, infoView.height/2 + distance,
 		"scene.pauseMenu", event.params)
 
 end
