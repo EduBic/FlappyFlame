@@ -1,7 +1,7 @@
 # FlappyFlame
 A prototype app like flappy bird for testing and evaluate the cross-platform engine Corona SDK
 
-For more information check the report https://github.com/EduBic/FlappyFlame-Report (in italian)
+For more information check the report https://github.com/EduBic/FlappyFlame-Report/releases (in italian)
 
 ### N.B.
 Actually you can't compile the project because some images assets can not be pushed online due to copyright.
